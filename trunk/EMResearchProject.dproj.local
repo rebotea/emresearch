@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-  <Transactions>
+	<Transactions>
     <Transaction>2012.03.12 16:53:55.877.pas,C:\Users\danner\Documents\RAD Studio\Projects\Unit3.pas=E:\News\emresearch\trunk\MainUnit.pas</Transaction>
     <Transaction>2012.03.12 16:53:55.913.dfm,C:\Users\danner\Documents\RAD Studio\Projects\Unit3.dfm=E:\News\emresearch\trunk\MainUnit.dfm</Transaction>
     <Transaction>2012.03.12 16:54:21.264.dproj,C:\Users\danner\Documents\RAD Studio\Projects\Project3.dproj=E:\News\emresearch\trunk\EMResearchProject.dproj</Transaction>
