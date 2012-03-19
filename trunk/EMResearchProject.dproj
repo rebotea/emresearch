@@ -50,6 +50,7 @@
 			<DCCReference Include="BodePlotUnit.pas"/>
 			<DCCReference Include="PMGeneratorWaveformUnit.pas"/>
 			<DCCReference Include="RetSlStressConclUnit.pas"/>
+			<DCCReference Include="BasicSizingMethodUnit.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

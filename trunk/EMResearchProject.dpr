@@ -6,7 +6,8 @@ uses
   SizingUnit in 'SizingUnit.pas',
   BodePlotUnit in 'BodePlotUnit.pas',
   PMGeneratorWaveformUnit in 'PMGeneratorWaveformUnit.pas',
-  RetSlStressConclUnit in 'RetSlStressConclUnit.pas';
+  RetSlStressConclUnit in 'RetSlStressConclUnit.pas',
+  BasicSizingMethodUnit in 'BasicSizingMethodUnit.pas';
 
 {$R *.res}
 
