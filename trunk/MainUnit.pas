@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, SizingUnit;
+  Dialogs, SizingUnit, BodePlotUnit, RetSlStressConclUnit, PMGeneratorWaveformUnit ;
 
 type
   TForm3 = class(TForm)

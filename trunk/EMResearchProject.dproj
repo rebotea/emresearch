@@ -47,6 +47,9 @@
 				<Form>Form3</Form>
 			</DCCReference>
 			<DCCReference Include="SizingUnit.pas"/>
+			<DCCReference Include="BodePlotUnit.pas"/>
+			<DCCReference Include="PMGeneratorWaveformUnit.pas"/>
+			<DCCReference Include="RetSlStressConclUnit.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
