@@ -46,6 +46,7 @@
 			<DCCReference Include="MainUnit.pas">
 				<Form>Form3</Form>
 			</DCCReference>
+			<DCCReference Include="SizingUnit.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

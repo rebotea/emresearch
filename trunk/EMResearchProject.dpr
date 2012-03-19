@@ -2,7 +2,8 @@ program EMResearchProject;
 
 uses
   Forms,
-  MainUnit in 'MainUnit.pas' {Form3};
+  MainUnit in 'MainUnit.pas' {Form3},
+  SizingUnit in 'SizingUnit.pas';
 
 {$R *.res}
 
