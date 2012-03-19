@@ -7,7 +7,8 @@ uses
   BodePlotUnit in 'BodePlotUnit.pas',
   PMGeneratorWaveformUnit in 'PMGeneratorWaveformUnit.pas',
   RetSlStressConclUnit in 'RetSlStressConclUnit.pas',
-  BasicSizingMethodUnit in 'BasicSizingMethodUnit.pas';
+  BasicSizingMethodUnit in 'BasicSizingMethodUnit.pas',
+  RotorLossesUnit in 'RotorLossesUnit.pas';
 
 {$R *.res}
 
