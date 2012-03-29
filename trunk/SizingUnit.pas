@@ -1,6 +1,12 @@
 unit SizingUnit;
 
 interface
+procedure ElectricalFrequencyRotorRadius(p,q,m, Ks, Rkp, kb, kw: extended);
+procedure MagnetDimensionsToothWidthAirGapFluxDensity(PC, R, Ws, Bg, Bsat, ge, eratio :extended);
+procedure Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, lel: extended);
+procedure MagneticGapFactor(R, hm, g, RSA, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, Ass, q, Ds, pi, Lst, Ra, Pa, Lac, Pgap, PcperL, Bb, Bt, Mcperl: extended);
+procedure MagneticFluxInternalVoltage(thm, pi, Bg, kg, p, Rs, Lst, Na, kw, ks, omega, Ea: extended);
+procedure InductancesReactances(pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended);
 
 uses
 Math;
