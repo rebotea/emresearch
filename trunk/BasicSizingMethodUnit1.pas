@@ -5,58 +5,67 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,math,
   Dialogs;
 
+  procedure BasicSizingMethod(var hs,lams,conv1,conv2,Pwr,Vtip,LovD,omega,Stress,P,Bg,Lst,hscm,R,D,f,rpm,Kz,Ja:Extended );
+  procedure SizingMethod(var Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc,tol,cpair,rhoair,nuair,P0,F0,B0,epsb,epsf,omega,Kc,Ea,m,Na,wt,wst,wsb,dc,Nsfp,Nsct,laz,le2,lel,f,vtip,gama,alfa,kp,kb,kw,ths,ks,Rs,Ri,R1,R2,kg,KI,Kr,murec,ws,taus,ge,Cphi,PC,Bg,thmrad,B1,lambda,Lag,perm,Las,Lam,Lslot,As1,Le,Ls,Xs,Lac,Aac,Mac,Lmach,Rci,Rco,Dmach,Mcb,
+Mct,Mc,Mm,Ms,Mser,Mtot,Ra,Bt,Bb,Pcb,Pct,i,notdone,la,xa,Pa,omegam,Rey,Cf,Pwind,Va,Ptemp,error,Ia,Ja,Pin,eff,pf,Pout,Jao,Pco,Pwindo,Pao,wso,hso,wto,dco,Lso,hmo,go:Extended);
 
 
 
 
 implementation
 
-  procedure BasicSizingMethod(var hs,lams,conv1,conv2,Pwr,Vtip,LovD,omega,Stress,P,Bg,Lst,hscm,R,D,f,rpm,Kz,Ja:Extended );
-  procedure SizingMethod(var Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc,tol,cpair,rhoair,nuair,P0,F0,B0,epsb,epsf,omega,Kc,Ea,m,Na,wt,wst,wsb,dc,Nsfp,Nsct,laz,le2,lel,f,vtip,gama,alfa,kp,kb,kw,ths,ks,Rs,Ri,R1,R2,kg,KI,Kr,murec,ws,taus,ge,Cphi,PC,Bg,thmrad,B1,lambda,Lag,perm,Las,Lam,Lslot,As1,Le,Ls,Xs,Lac,Aac,Mac,Lmach,Rci,Rco,Dmach,Mcb,
-Mct,Mc,Mm,Ms,Mser,Mtot,Ra,Bt,Bb,Pcb,Pct,i,notdone,la,xa,Pa,omegam,Rey,Cf,Pwind,Va,Ptemp,error,Ia,Ja,Pin,eff,pf,Pout,Jao,Pco,Pwindo,Pao,wso,hso,wto,dco,Lso,hmo,go:Extended);
- {$R *.dfm}
+
 
 procedure BasicSizingMethod(var hs,lams,conv1,conv2,Pwr,Vtip,LovD,omega,Stress,P,Bg,Lst,hscm,R,D,f,rpm,Kz,Ja:Extended) ;
 begin
-//General variables
+//General variables  оБщие переменные
 
-// Constants & conversion factors
+// Constants & conversion factors    константы и коэфициенты пересчета
 
-hs:=0.015; // Assume slot depth of 15 mm
-lams:=0.5; // Assume slot fill fraction
-conv1:=9.81; // 9.81 W per Nm/s
-conv2:=703.0696; // 703.0696 N/m2 per psi
+hs:=0.015; // Assume slot depth of 15 mm      Предполагается, что  глубина слота 15 мм
 
-// INPUTS
+lams:=0.5; // Assume slot fill fraction       доля коэфицента заполнения
 
-Pwr:=16e6; // Required power
-vtip:=200; // Max tip speed (m/s)
-LovD:=2.851 ; // Wound rotor usually 0.5-1.0, PM 1.0-3.0
+conv1:=9.81; // 9.81 W per Nm/s       9,81 Вт в Нм / с
 
-// Shear stress usually 1-10 psi small machines, 10-20 large liquid
-// liquid cooled machines
+conv2:=703.0696; // 703.0696 N/m2 per psi     703,0696 Н/м2 на дюйм
+
+
+// INPUTS  входы
+
+Pwr:=16e6; // Required power  Потребляемая мощность
+
+vtip:=200; // Max tip speed (m/s)  Максимальная окружная скорость (м / с)
+LovD:=2.851 ; // Wound rotor usually 0.5-1.0, PM 1.0-3.0    фазный ротор обычно 0,5-1,0, 1,0-3,0 PM
+
+
+// Shear stress usually 1-10 psi small machines, 10-20 large liquid    Напряжение сдвига обычно 1-10 фунтов на квадратный дюйм малых машин, 10-20 больших жидкости
+
+// liquid cooled machines Жидкостное охлаждение машин
+
 
 stress:=15;
-p:=3; // Pole pairs
-Bg:=0.8; // Tesla
+p:=3; // Pole pairs количество пар полюсов
 
-// Calculations
-// Size
-// Initially use
+Bg:=0.8; // Tesla    Тесла
+
+// Calculations     Расчеты
+// Size    Размер
+// Initially use Начальное использование
 
 Pwr:=2*pi*R*Lst*stress*vtip ;
 Lst:=2*LovD*R;
 hscm:=hs*100;
-R:=sqrt(Pwr/(2*pi*(LovD*2)*vtip*stress*convl*conv2));
+R:=sqrt(Pwr/(2*pi*(LovD*2)*vtip*stress*conv1*conv2));
 D:=2*R;
 Lst:=LovD*D;
 
-// Speed
+// Speed   Скорость
 omega:=(p*vtip)/R;
 f:=omega/(2*pi);
 rpm:=(60*f)/p;
 
-// Current densities
+// Current densities  Плотность тока
 Kz:=(stress*conv2)/(Bg*100);
 Ja:=10*Kz/(hscm*lams);
 end;
@@ -64,57 +73,61 @@ end;
 
 
 procedure SizingMethod(var Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc,tol,cpair,rhoair,nuair,P0,F0,B0,epsb,epsf,omega,Kc,Ea,m,Na,wt,wst,wsb,dc,Nsfp,Nsct,laz,le2,lel,f,vtip,gama,alfa,kp,kb,kw,ths,ks,Rs,Ri,R1,R2,kg,KI,Kr,murec,ws,taus,ge,Cphi,PC,Bg,thmrad,B1,lambda,Lag,perm,Las,Lam,Lslot,As1,Le,Ls,Xs,Lac,Aac,Mac,Lmach,Rci,Rco,Dmach,Mcb,
-Mct,Mc,Mm,Ms,Mser,Mtot,Ra,Bt,Bb,Pcb,Pct,i,notdone,la,xa,Pa,omegam,Rey,Cf,Pwind,Va,Ptemp,error,Ia,Ja,Pin,eff,pf,Pout,Jao,Pco,Pwindo,Pao,wso,hso,wto,dco,Lso,hmo,go:Extended);
+Mct,Mc,Mm,Ms,Mser,Mtot,le1,le3,le4,Ra,Bt,mu0,Bb,Pcb,Pct,i,notdone,la,xa,Pa,omegam,Rey,Cf,Pwind,Va,Ptemp,error,Ia,Ja,Pin,eff,pf,Pout,Jao,Pco,Pwindo,Pao,wso,hso,wto,dco,Lso,hmo,go:Extended);
 
 begin
 
- // General variables
+ // General variables   Общие переменные
 
-  Pwr:=16e6; // Required power (W)
-  rpm:=13000; // Speed (RPM)
-  psi:=0; // Power factor angle
+  Pwr:=16e6; // Required power (W)    Потребляемая мощность (Вт)
 
-// Rotor variables
+  rpm:=13000; // Speed (RPM)   скорость вращения
+  psi:=0; // Power factor angle   угловой коэфициент мощьности
 
-  R:=0.147; // Rotor radius (m)
-  hm:=0.025; // Magnet thickness (m)
-  Lst:=0.838; // Rotor stack length (m)
-  p:=3; // Number of pole pairs
-  Br:=1.2; // Magnet remnant flux density (T)
-  thm:=50; // Magnet physical angle (deg)
-  thsk:=10; // Magnet skew angle (actual deg)
+// Rotor variables   переменные ротора
 
-// Stator variables
+  R:=0.147; // Rotor radius (m)  рабиус ротора
+  hm:=0.025; // Magnet thickness (m)  толщина магнита
+  Lst:=0.838; // Rotor stack length (m)   длина стэка ротора
+  p:=3; // Number of pole pairs      число пар полюсов
+  Br:=1.2; // Magnet remnant flux density (T)     ??????????????
+  thm:=50; // Magnet physical angle (deg)  физический угол магнита
+  thsk:=10; // Magnet skew angle (actual deg) угол наклона магнита
 
-  q:= 3; // Number of phases
-  Ns:=36; // Number of slots
-  Nsp:= 1; // Number of slots short pitched
-  g:= 0.004; // Air gap (m)
-  tfrac:= 0.5; // Peripheral tooth fraction
-  hs:=0.025; // Slot depth (m)
-  hd:=0.0005; // Slot depression depth (m)
-  wd:=1e-6; // Slot depression width (m)
-  syrat:=0.7;// Stator back iron ratio (yoke thick/rotor radius)
-  Nc:=1; // Turns per coil
-  lams:=0.5; // Slot fill fraction
-  sigst:=6.0e+7; // Stator winding conductivity
+// Stator variables    переменные статора
 
-// Densities
+  q:= 3; // Number of phases     количество фаз
+  Ns:=36; // Number of slots           количество слотов
+  Nsp:= 1; // Number of slots short pitched   длина стека ротора
+  g:= 0.004; // Air gap (m)     воздушный зазор
+  tfrac:= 0.5; // Peripheral tooth fraction переферийная часть зуба
+  hs:=0.025; // Slot depth (m)  глубина слота
+  hd:=0.0005; // Slot depression depth (m)    глубина слота депрессии
+  wd:=1e-6; // Slot depression width (m)  ширина слота дипрессии
+  syrat:=0.7;// Stator back iron ratio (yoke thick/rotor radius) ???????????????77
+  Nc:=1; // Turns per coil    повороты катушки
+  lams:=0.5; // Slot fill fraction     фракция заполнения слота
+  sigst:=6.0e+7; // Stator winding conductivity     проводимость обмотки статора
 
-  rhos:=7700; // Steel density (kg/m3)
-  rhom:=7400; // Magnet density (kg/m3)
-  rhoc:=8900; // Conductor density (kg/m3)
 
-//Constants to be used
+// Densities   плотноть
 
-  mu0:=4*pi*le-7; // Free space permeability
-  tol:=1e-2; // Tolerance factor
-  cpair:=1005.7; // Specific heat capacity of air (J/kg*C)
-  rhoair:=1.205; // Density of air at 20 C (kg/m3)
-  nuair:=1.5e-5; // Kinematic viscosity of air at 20 C (m2/s)
-  P0:=36.79; // Base Power Losss, W/lb
-  FO:=1000; // Base freuency, 60 Hz
-  B0:=1.0; // Base flux density, 1.0 T
+  rhos:=7700; // Steel density (kg/m3)   плотность стали
+  rhom:=7400; // Magnet density (kg/m3)                 плотность магнита
+  rhoc:=8900; // Conductor density (kg/m3)         плотность кондуктора
+
+//Constants to be used    исползуемые константы
+
+  mu0:=4*pi*1e-7; // Free space permeability  Свободное место на проницаемость
+
+  tol:=1e-2; // Tolerance factor   фактор толерантости
+  cpair:=1005.7; // Specific heat capacity of air (J/kg*C)  Удельная теплоемкость воздуха (Дж / кг * С)
+
+  rhoair:=1.205; // Density of air at 20 C (kg/m3) плотность воздуха при 20 С
+  nuair:=1.5e-5; // Kinematic viscosity of air at 20 C (m2/s)  кинематическая вязкость воздуха при 20 ° С (м2 / с)
+  P0:=36.79; // Base Power Losss, W/lb   базовые потери в мощьности
+  F0:=1000; // Base freuency, 60 Hz     ??????????
+  B0:=1.0; // Base flux density, 1.0 T    базовая плотность тока
   epsb:=2.12;
   epsf:=1.68;
 
@@ -135,7 +148,7 @@ begin
 
   le2:=pi*laz;// End length (half coil)
 
-  lel:=2*le2/(2*pi);// End length (axial direction)
+  le1:=2*le2/(2*pi);// End length (axial direction)
 
 // Calculate electrical frequency & surface speed
 
@@ -159,14 +172,14 @@ begin
   Ri:=R;
   R1:=R;
   R2:=R+hm;
-  kg := (power(Ri,(p-1))/(power(Rs,(2*p))-power(Ri,(2*p))))*((p/(p+l))*(power(R2,(p+l))-power(R1^(p+l)))+(p*power(Rs,(2*p))/(p-1))*(power(R1,(1-p))-power(R2,(1-p))));
+  kg := (power(Ri,(p-1))/(power(Rs,(2*p))-power(Ri,(2*p))))*((p/(p+1))*(power(R2,(p+1))-power(R1,(p+1)))+(p*power(Rs,(2*p))/(p-1))*(power(R1,(1-p))-power(R2,(1-p))));
 
 // Calculate air gap magnetic flux density
 // Account for slots, reluctance, and leakage
 
   ws := (wst+wsb)/2; // Average slot width
   taus:=  ws + wt; // Width of slot and tooth
-  Kc :=  1/(1-(1/((taus/ws)*((5*g/ws)+l))));
+  Kc :=  1/(1-(1/((taus/ws)*((5*g/ws)+1))));
   ge :=  Kc*g;
   Cphi:=  (p*thm)/180; // Flux concentration factor
   KI :=  0.95; // Leakage factor
@@ -178,14 +191,14 @@ begin
 
 // Calculate magnetic flux and internal voltage
   thmrad :=  thm*(pi/180);
-  BI :=  (4/pi)*Bg*kg*sin(p*thmrad/2);
-  lambda :=  2*Rs*Lst*Na*kw*ks*Bl/p;
+  B1 :=  (4/pi)*Bg*kg*sin(p*thmrad/2);
+  lambda :=  2*Rs*Lst*Na*kw*ks*B1/p;
   Ea :=  omega*lambda/sqrt(2); // RMS back voltage
 
 // Calculation of inductances/reactances
 
 // Air-gap inductance
-  Lag:=((q/2)*(4/pi)*(muo*power(Na,2)*power(kw,2)*Lst*Rs)/(power(p,2)*(g+hm)));
+  Lag:=((q/2)*(4/pi)*(mu0*power(Na,2)*power(kw,2)*Lst*Rs)/(power(p,2)*(g+hm)));
 
 // Slot leakage inductance
   perm :=  mu0*((1/3)*(hs/wst) + hd/wst);
@@ -194,10 +207,11 @@ begin
   if q = 3 then Lslot :=  Las + 2*Lam*cos(2*pi/q) // 3 phase equation
            else Lslot :=  Las - 2*Lam*cos(2*pi/q); // multiple phases
 
+
 // End-turn inductance (Hanselman)
 
   As1 :=  ws*hs; // Slot area
-  Le :=  ((Nc*muO*(taus)*power(Na,2))/2)*log(wt*sqrt(pi)/sqrt(2*As1));
+  Le :=  ((Nc*mu0*(taus)*power(Na,2))/2)*(Log(wt*sqrt(pi)/sqrt(2*As1)));
 
 // Total inductance and reactance
 
@@ -226,11 +240,11 @@ begin
 
   Bt := Bg/tfrac; //Tooth Flux Density
   Bb :=  Bg*R/(p*dc); // Back iron flux density (Hanselman)
-  Pcb:=  Mcb*P0*power(abs(Bb/BO),epsb)*power(abs(f/F0),epsf); //Core back iron loss
+  Pcb:=  Mcb*P0*power(abs(Bb/B0),epsb)*power(abs(f/F0),epsf); //Core back iron loss
 
 // Teeth Loss
 
-  Pct :=  Mct*P0*power(abs(Bt/BO),epsb)*power(abs(f/F0),epsf);
+  Pct :=  Mct*P0*power(abs(Bt/B0),epsb)*power(abs(f/F0),epsf);
 
 // Total core loss
 
@@ -241,40 +255,40 @@ begin
   i := 0;
   la :=  Pwr/(q*Ea);
   while notdone=1 do
-   i:=  i+1;
-   xa :=  Xs*Ia/Ea;
+   begin
+    i:=  i+1;
+    xa :=  Xs*Ia/Ea;
 
-// Conductor losses
-   Pa :=  q*IaA2*Ra;
+    // Conductor losses
+    Pa :=  q*power(Ia,2)*Ra;
 
-//Gap friction losses
-//Reynold's number in air gap
+    //Gap friction losses
+    //Reynold's number in air gap
 
-   omegam :=  omega/p;
-   Rey :=  omegam*R*g/nuair;
+    omegam :=  omega/p;
+    Rey :=  omegam*R*g/nuair;
+    Cf :=  0.0725/power(Rey,2);//Friction coefficient
+    Pwind := Cf*pi*rhoair*power(omegam,3)*power(R,4)*Lst; // Windage losses
 
-
-   Cf :=  0.0725/power(Rey,2);//Friction coefficient
-   Pwind := Cf*pi*rhoair*omegamA3*power(R,4)*Lst; // Windage losses
-
-// Get terminal voltage
-   Va :=  sqrt(power(Ea,2)-power(((Xs+Ra)*Ia*COS(pSi)),2))-(Xs+Ra)*Ia*sin(psi);
-   Ptemp :=  q*Va*Ia*cos(psi)-Pwind;
-   error :=  Pwr/Ptemp;
-   err(i) :=  error;
-   if abs(error - 1) < tol then notdone = 0
-                           else Ia :=Ia*error
-end;
+    // Get terminal voltage
+    Va :=  sqrt(power(Ea,2)-power(((Xs+Ra)*Ia*COS(pSi)),2))-(Xs+Ra)*Ia*sin(psi);
+    Ptemp :=  q*Va*Ia*cos(psi)-Pwind;
+    error :=  Pwr/Ptemp;
+    end;
+    if abs(error - 1) < tol then notdone = 0
+                           else Ia :=Ia*error ;
 
 
 
 
-//Remaining performance parameters
 
-//Current density
-Ja:=  Ia/Aac;
 
-// Power and efficiency
+  //Remaining performance parameters
+
+  //Current density
+  Ja:=  Ia/Aac;
+
+  // Power and efficiency
 
 Pin := Pwr+Pc+Pa+Pwind;
 eff:= Pwr/Pin;
@@ -293,9 +307,10 @@ hmo := hm* 1000;
 go :=  g*1000;
 
 
+
+end;
+
 end.
-
-
 
 
 
