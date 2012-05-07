@@ -52,224 +52,217 @@ epsf= 1.68;
 
 type
 TEFRROutput = record
-R, Ns:extended;
+f, omega, floor, gama, Nsfp, Nsct, alfa, Ks, kw, kp, kb, ths, R, Ns:extended;
 end;
 
 MDTWAGFDOutput = record
+thme, alpham, Cphi, hm, Ds, K1, Kr, murec, wt, taus, Kc: Extended;
+notdone: boolean;
 end;
 
 ValOutput = record
+thm, thmrad, hm, Ds, Bg, As1, laz, le2: extended;
 end;
 
 MGFOutput = record
+Pwr, Pc, error1, Ptemp1, Ra, Pa, Lac, Pgap, Aac, k, ke, ki, Ia, Lst, i, Rs, Ri, R1, R2, kg, McbperL, MctperL, McperL, Rco, Rci, Bt, Bb, PcbperL, PctperL, PcperL, P0, B0, Na: extended;
+ notfin, notdone: boolean;
 end;
 
 MFIOutput = record
+B1, lambda: extended;
 end;
 
 IROutput =record
+Perror, pf, eff, Lag, Las, Lam,  taus, Le, Ls, Xs, Rco, Ms, Mtot, omegam, Cf, xa, Va, k, Pout, Pwr, Jao, Pco, Pc, Pwindo, Pao, wso, hso, wto, dco, dc, Lso, hmo, go: extended;
+notdone: boolean;
+fprintf: string;
 end;
 
-function ElectricalFrequencyRotorRadius(p, q, m: extended): TEFRROutput;
-function MagnetDimensionsToothWidthAirGapFluxDensity(Ns, PC, R, Ws, Bg, Bsat, ge, eratio :extended): MDTWAGFDOutput;
-function Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, lel, Nsct: extended): ValOutput;
-function MagneticGapFactor(le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds, pi: extended): MGFOutput;
+function ElectricalFrequencyRotorRadius(floor, p, q, m, rpm, vtip, Nsp, thsk: extended): TEFRROutput;
+function MagnetDimensionsToothWidthAirGapFluxDensity(Ns, PC, R, Ws, Bg, Bsat, ge, eratio, g, Br, tol :extended): MDTWAGFDOutput;
+function Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, lel, Nsct, hs, Bsat: extended): ValOutput;
+function MagneticGapFactor(Nc, sigst, tol, le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds, pi: extended): MGFOutput;
 function MagneticFluxInternalVoltage(thmrad, thm, pi, Bg, kg, p, Rs, Lst, Na, kw, ks, omega, Ea: extended): MFIOutput;
-function InductancesReactances(Pa, Ra, lel, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended): IROutput;
+function InductancesReactances(p, m, Nsp, rhom, rhos, rhoair, psi, tol, Pa, Ra, lel, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended): IROutput;
 
 
 implementation
 
-function ElectricalFrequencyRotorRadius(p, q, m: extended):TEFRROutput;
-var
-f, omega, floor, gama, Nsfp, Nsct, alfa, Ks, kw, kp, kb, ths : extended;
+function ElectricalFrequencyRotorRadius(floor, p, q, m, rpm, vtip, Nsp, thsk: extended): TEFRROutput;
 begin
-  f:= p*rpm/60;
-  omega:= 2*pi*f;
-  Result.R:= p*vtip/omega;
+  result.f:= p*rpm/60;
+  result.omega:= 2*pi*result.f;
+  Result.R:= p*vtip/result.omega;
 
   // Winding & skew factors
-  Result.Ns:= floor*(2*q*p*m); // Number of slots
-  gama:= 2*pi*p/Result.Ns;
-  Nsfp:= floor*(Result.Ns/(2*p));
-  Nsct:= Nsfp - Nsp;
-  alfa:= pi*Nsct/Nsfp;
-  kp:= sin(pi/2)*sin(alfa/2);
-  kb:= sin(m*gama/2)/(m*sin(gama/2));
-  kw:= kp*kb;
-  ths:= ((p*thsk)+1e-6)*(pi/180); // skew angle (elec rad)
-  ks:= sin(ths/2)/(ths/2);
+  Result.Ns:= floor *(2*q*p*m); // Number of slots
+  result.gama:= 2*pi*p/Result.Ns;
+  result.Nsfp:= floor *(Result.Ns/(2*p));
+  result.Nsct:= result.Nsfp - Nsp;
+  result.alfa:= pi*result.Nsct/result.Nsfp;
+  result.kp:= sin(pi/2)*sin(result.alfa/2);
+  result.kb:= sin(m*result.gama/2)/(m*sin(result.gama/2));
+  result.kw:= result.kp*result.kb;
+  result.ths:= ((p*thsk)+1e-6)*(pi/180); // skew angle (elec rad)
+  result.ks:= sin(result.ths/2)/(result.ths/2);
 end;
 
-function MagnetDimensionsToothWidthAirGapFluxDensity(Ns, PC, R, Ws, Bg, Bsat, ge, eratio :extended): MDTWAGFDOutput;
-var
-thme, alpham, Cphi, hm, Ds, K1, Kr, murec, wt, taus, Kc: Extended;
-notdone: boolean;
+function MagnetDimensionsToothWidthAirGapFluxDensity(Ns, PC, R, Ws, Bg, Bsat, ge, eratio, g, Br, tol :extended): MDTWAGFDOutput;
 begin
-  thme:= 1; // Initial Magnet angle (deg e)
-  notdone:= true;
+  result.thme:= 1; // Initial Magnet angle (deg e)
+  result.notdone:= true;
   ge:= g; // Initial effective air gap
-  while notdone= true do
+  while result.notdone= true do
   begin
-    alpham:= thme/180; // Pitch coverage coefficient
-    Cphi:= (2*alpham)/(1+alpham); // Flux concentration factor
-    hm:= ge*Cphi*PC; // Magnet height
-    Ds:= 2*(R+hm+g); // Inner stator/air gap diameter
-    K1:= 0.95; // Leakage factor
-    Kr:= 1.05; // Reluctance factor
-    murec:= 1.05; // Recoil permeability
-    Bg:= ((K1*Cphi)/(1+(Kr*murec/PC)))*Br;
-    wt:= ((pi*Ds)/Ns)*(Bg/Bsat); // Tooth width
-    taus:= ws + wt; // Width of slot and tooth
-    Kc:= 1/(1-(1/((taus/ws)*((5*g/ws)+1)))); // Carter's coefficient
-    ge:= Kc*g;
-    eratio:= ws/wt;
+    result.alpham:= result.thme/180; // Pitch coverage coefficient
+    result.Cphi:= (2*result.alpham)/(1+result.alpham); // Flux concentration factor
+    result.hm:= ge*result.Cphi*PC; // Magnet height
+    result.Ds:= 2*(R+result.hm+g); // Inner stator/air gap diameter
+    result.K1:= 0.95; // Leakage factor
+    result.Kr:= 1.05; // Reluctance factor
+    result.murec:= 1.05; // Recoil permeability
+    Bg:= ((result.K1*result.Cphi)/(1+(result.Kr*result.murec/PC)))*Br;
+    result.wt:= ((pi*result.Ds)/Ns)*(Bg/Bsat); // Tooth width
+    result.taus:= ws + result.wt; // Width of slot and tooth
+    result.Kc:= 1/(1-(1/((result.taus/ws)*((5*g/ws)+1)))); // Carter's coefficient
+    ge:= result.Kc*g;
+    eratio:= ws/result.wt;
     if abs(eratio - 1) < tol then
-     notdone:= false
+     result.notdone:= false
     else
-    thme:= thme + 1;
+    result.thme:= result.thme + 1;
   end;
 end;
 
-function Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, lel, Nsct: extended): ValOutput;
-var
-thm, thmrad, hm, Ds, Bg, As1, laz, le2: extended;
+function Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, lel, Nsct, hs, Bsat: extended): ValOutput;
 begin
-  thm:= thme/p; // Magnet physical angle
-  thmrad:= thm*(pi/180);
-  hm:= ge*Cphi*PC; // Magnet height
-  Ds:= 2*(R+hm+g); // Inner stator/air gap diameter
+  result.thm:= thme/p; // Magnet physical angle
+  result.thmrad:= result.thm*(pi/180);
+  result.hm:= ge*Cphi*PC; // Magnet height
+  result.Ds:= 2*(R+result.hm+g); // Inner stator/air gap diameter
   // Generate geometry of machine
   // Peripheral tooth fraction
   tfrac:= wt/(wt+ws);
   // Slot top width (at air gap)
-  wst:= 2*pi*(R+g+hm+hd)*tfrac/Ns;
+  wst:= 2*pi*(R+g+result.hm+hd)*tfrac/Ns;
   // Slot bottom width
-  wsb:= wst*(R+g+hm+hd+hs)/(R+g+hm+hd);
+  wsb:= wst*(R+g+result.hm+hd+hs)/(R+g+result.hm+hd);
   // Stator core back iron depth
-  dc:= (pi*Ds*thmrad/(4*p))*(Bg/Bsat);
+  dc:= (pi*result.Ds*result.thmrad/(4*p))*(result.Bg/Bsat);
   // Core inside radius
-  Rci:= R+hm+g+hd+hs;
+  Rci:= R+result.hm+g+hd+hs;
   // Core outside radius
   Rco:= Rci+dc;
   // Slot area
-  As1:= ws*hs;
+  result.As1:= ws*hs;
   // Estimate end turn length
   // End turn travel (one end)
-  laz:= pi*(R+g+hm+hd+0.5*hs)*Nsct/Ns;
+  result.laz:= pi*(R+g+result.hm+hd+0.5*hs)*Nsct/Ns;
   // End length (half coil)
-  le2:= pi*laz;
+  result.le2:= pi*result.laz;
   // End length (axial direction)
-  lel:= 2*le2/(2*pi);
+  lel:= 2*result.le2/(2*pi);
  end;
 
-function MagneticGapFactor(le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds, pi: extended): MGFOutput;
-var
-Pwr, Pc, error1, Ptemp1, Ra, Pa, Lac, Pgap, Aac, k, ke, ki, Ia, Lst, i, Rs, Ri, R1, R2, kg, McbperL, MctperL, McperL, Rco, Rci, Bt, Bb, PcbperL, PctperL, PcperL, P0, B0, Na: extended;
- notfin, notdone: boolean;
+function MagneticGapFactor(Nc, sigst, tol, le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds, pi: extended): MGFOutput;
 begin
-  Rs:= R+hm+g;
-  Ri:= R;
-  R1:= R;
-  R2:= R+hm;
-  kg:= ((power(Ri,(p-1)))/(power(RS,(2*p))-power(Ri,(2*p))))*((p/(p+1))*(power(R2,(p+1))-power(Ri,(p+ 1)))+(power(p*RS,(2*p))/(p- 1))*(power(R1, (1-p))-power(R2,(1-p))));
+  result.Rs:= R+hm+g;
+  result.Ri:= R;
+  result.R1:= R;
+  result.R2:= R+hm;
+  result.kg:= ((power(result.Ri,(p-1)))/(power(result.RS,(2*p))-power(result.Ri,(2*p))))*((p/(p+1))*(power(result.R2,(p+1))-power(result.Ri,(p+ 1)))+(power(p*result.RS,(2*p))/(p- 1))*(power(result.R1, (1-p))-power(result.R2,(1-p))));
   // Core loss calculations (per length)
   // Core mass per length
-  McbperL:= rhos*pi*(sqr(Rco) - sqr(Rci)); //% Back iron
-  MctperL:=rhos *(Ns*wt*hs+2*pi*R*hd-Ns*hd*wd); //% Teeth
-  McperL:= McbperL + MctperL;
+  result.McbperL:= rhos*pi*(sqr(result.Rco) - sqr(result.Rci)); //% Back iron
+  result.MctperL:=rhos *(Ns*wt*hs+2*pi*R*hd-Ns*hd*wd); //% Teeth
+  result.McperL:= result.McbperL + result.MctperL;
   // Tooth Flux Density
-  Bt:= Bg/tfrac;
+  result.Bt:= Bg/tfrac;
   // Back iron flux density (Hanselman)
-  Bb:= Bg*R/(p*dc);
+  result.Bb:= Bg*R/(p*dc);
   // Core back iron loss per length
-  PcbperL:= McbperL*P0*power(abs(Bb/B0),epsb) * power(abs(f/FO), epsf);
+  result.PcbperL:= result.McbperL*P0*power(abs(result.Bb/result.B0),epsb) * power(abs(f/FO), epsf);
   // Teeth Loss per length
-  PctperL:= MctperL*P0*power(abs(Bt/B0), epsb) * power(abs(f/FO), epsf);
+  result.PctperL:= result.MctperL*P0*power(abs(result.Bt/result.B0), epsb) * power(abs(f/FO), epsf);
   // Total core loss per length
-  PcperL:= PcbperL + PctperL;
+  result.PcperL:= result.PcbperL + result.PctperL;
   // Current and surface current density
   // Armature turns (each slot has 2 half coils)
-  Na:= 2*p*m*Nc;
+  result.Na:= 2*p*m*Nc;
   // Arm cond area (assumes form wound)
-  Aac:= (As1*lams)/(2*Nc);
+  result.Aac:= (As1*lams)/(2*Nc);
   // Power & Current waveform factors (Lipo)
-  ke:= 0.52;
-  ki:=sqrt(2);
+  result.ke:= 0.52;
+  result.ki:=sqrt(2);
   // Initial terminal current
-  Ia:= Ns*lams*As1*Ja* 1e4/(2*q*Na);
-  notfin:= true;
-  Lst:=0.1; // Initial stack length
-  i:= 1;
+  result.Ia:= Ns*lams*As1*Ja* 1e4/(2*q*result.Na);
+  result.notfin:= true;
+  result.Lst:=0.1; // Initial stack length
+  result.i:= 1;
   // Start loop to determine Lst, Ea, Va, and Ia
-  notdone:= true;
-  k:= 0;
-  while notdone = true do
+  result.notdone:= true;
+  result.k:= 0;
+  while result.notdone = true do
   begin
-    k:=k+ 1;
+    result.k:=result.k+ 1;
     // Surface current density
-    A:= 2*q*Na*Ia/(pi*Ds);
+    A:= 2*q*result.Na*result.Ia/(pi*Ds);
     // Calculate stack length of machine
     // Loop to get stack length
-     while notfin = true do
+     while result.notfin = true do
      begin
        // Gap power
-       Pgap:= 4*pi*ke*ki*kw*ks*kg*sin(thmrad)*(f/p)*A*Bg*sqr(Ds)*Lst;
+       result.Pgap:= 4*pi*result.ke*result.ki*kw*ks*result.kg*sin(thmrad)*(f/p)*A*Bg*sqr(Ds)*result.Lst;
        // Length of conductor
-       Lac:= 2*Na*(Lst+2*le2);
+       result.Lac:= 2*result.Na*(result.Lst+2*le2);
        // Stator resistance
-       Ra:= Lac/(sigst*Aac);
+       result.Ra:= result.Lac/(sigst*result.Aac);
        // Copper Loss
-       Pa:= q*sqr(Ia)*Ra;
+       result.Pa:= q*sqr(result.Ia)*result.Ra;
        // Core losses
-       Pc:= PcperL*Lst;
+       result.Pc:= result.PcperL*result.Lst;
        // Iterate to get length
-       Ptemp1:= Pgap-Pa-Pc;
-       error1:= Pwr/Ptemp1;
+       result.Ptemp1:= result.Pgap-result.Pa-Pc;
+       result.error1:= Pwr/result.Ptemp1;
 //     err(i):= error;
-       if abs(error1-1) < tol then
-       notfin:= false
+       if abs(result.error1-1) < tol then
+       result.notfin:= false
        else
        begin
-         Lst:= Lst*error1;
-         i:=i+ 1;
+         result.Lst:= result.Lst*result.error1;
+         result.i:=result.i+ 1;
       end;
      end;
   end;
 end;
 
 function MagneticFluxInternalVoltage(thmrad, thm, pi, Bg, kg, p, Rs, Lst, Na, kw, ks, omega, Ea: extended): MFIOutput;
-var
-B1, lambda: extended;
 begin
   thmrad:= thm*(pi/180);
-  B1:= (4/pi)*Bg*kg*sin(p*thmrad/2);
-  lambda:= 2*Rs*Lst*Na*kw*ks*B1/p;
-  Ea:= omega*lambda/sqrt(2); // RMS back voltage
+  result.B1:= (4/pi)*Bg*kg*sin(p*thmrad/2);
+  result.lambda:= 2*Rs*Lst*Na*kw*ks*result.B1/p;
+  Ea:= omega*result.lambda/sqrt(2); // RMS back voltage
 end;
 
-function InductancesReactances(Pa, Ra, lel, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended): IROutput;
-var
-Perror, pf, eff, Lag, Las, Lam,  taus, Le, Ls, Xs, Rco, Ms, Mtot, omegam, Cf, xa, Va, k, Pout, Pwr, Jao, Pco, Pc, Pwindo, Pao, wso, hso, wto, dco, dc, Lso, hmo, go: extended;
-notdone: boolean;
-fprintf: string;
+function InductancesReactances(p, m, Nsp, rhom, rhos, rhoair, psi, tol, Pa, Ra, lel, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended): IROutput;
 begin
   // Air-gap inductance
-  Lag:= (q/2)*(4/pi)*(muO*sqr(Na)*sqr(kw)*Lst*Rs)/(sqr(p)*(g+hm));
+  result.Lag:= (q/2)*(4/pi)*(muO*sqr(Na)*sqr(kw)*Lst*Rs)/(sqr(p)*(g+hm));
   // Slot leakage inductance
   perm:= muO*((1/3)*(hs/wst) + hd/wst);
-  Las:= 2*p*Lst*perm*(4*sqr(Nc)*(m-Nsp)+2*Nsp*sqr(Nc));
-  Lam:= 2*p*Lst*Nsp*sqr(Nc)*perm;
+  result.Las:= 2*p*Lst*perm*(4*sqr(Nc)*(m-Nsp)+2*Nsp*sqr(Nc));
+  result.Lam:= 2*p*Lst*Nsp*sqr(Nc)*perm;
   if q= 3 then
-  Lslot:= Las + 2*Lam*cos(2*pi/q) //% 3 phase equation
+  Lslot:= result.Las + 2*result.Lam*cos(2*pi/q) //% 3 phase equation
   else
-  Lslot:= Las - 2*Lam*cos(2*pi/q); //% multiple phases
+  Lslot:= result.Las - 2*result.Lam*cos(2*pi/q); //% multiple phases
   // End-turn inductance (Hanselman)
-  taus:= ws + wt; //% Width of slot and tooth
-  Le:= ((Nc*muO*(taus)*sqr(Na))/2)*ln(wt*sqrt(pi)/sqrt(2*As1));
+  result.taus:= ws + wt; //% Width of slot and tooth
+  result.Le:= ((Nc*muO*(result.taus)*sqr(Na))/2)*ln(wt*sqrt(pi)/sqrt(2*As1));
   // Total inductance and reactance
-  Ls:= Lag+Lslot+Le;
-  Xs:= omega*Ls;
+  result.Ls:= result.Lag+Lslot+result.Le;
+  result.Xs:= omega*result.Ls;
   // Lengths, Volumes, and Weights
   // Armature conductor length
   Lac:= 2*Na*(Lst+2*le2);
@@ -278,43 +271,43 @@ begin
   //% Overall machine length
   Lmach:= Lst+2*lel;
   //% Overall diameter
-  Dmach:= 2*Rco;
+  Dmach:= 2*result.Rco;
   //% Core mass
   Mc:= McperL*Lst;
   //% Magnet mass
   Mm:= 0.5*(p*thmrad)*(sqr(R+hm)-sqr(R))*Lst*rhom;
   //% Shaft mass
-  Ms:= pi*sqr(R)*Lst*rhos;
+  result.Ms:= pi*sqr(R)*Lst*rhos;
   //% 15% service fraction
-  Mser:= 0.15*(Mc+Ms+Mm+Mac);
+  Mser:= 0.15*(Mc+result.Ms+Mm+Mac);
   //% Total mass
-  Mtot:= Mser+Mc+Ms+Mm+Mac;
+  result.Mtot:= Mser+Mc+result.Ms+Mm+Mac;
   //"% Gap friction losses
   //"% Reynold's number in air gap
-  omegam:= omega/p;
-  Rey:= omegam*R*g/nuair;
+  result.omegam:= omega/p;
+  Rey:= result.omegam*R*g/nuair;
   //% Friction coefficient
-  Cf:= 0.0725/power(Rey,0.2);
+  result.Cf:= 0.0725/power(Rey,0.2);
   //% Windage losses
-  Pwind:= Cf*pi*rhoair*power(omegam,3)*power(R,4)*Lst;
+  Pwind:= result.Cf*pi*rhoair*power(result.omegam,3)*power(R,4)*Lst;
   //% Get terminal voltage
-  xa:= Xs*Ia/Ea;
-  Va:= sqrt(sqr(Ea)-((Xs+Ra)*Ia*sqr(cos(psi))))-(Xs+Ra)*Ia*sin(psi);
-  Ptemp:= q*Va*Ia*cos(psi)-Pwind;
-  Perror:= Pwr/Ptemp;
+  result.xa:= result.Xs*Ia/Ea;
+  result.Va:= sqrt(sqr(Ea)-((result.Xs+Ra)*Ia*sqr(cos(psi))))-(result.Xs+Ra)*Ia*sin(psi);
+  Ptemp:= q*result.Va*Ia*cos(psi)-Pwind;
+  result.Perror := Pwr/Ptemp;
   //Perr(k):= Perror;
-  if abs(Perror-1) < tol then
-  notdone:= false
+  if abs(result.Perror-1) < tol then
+  result.notdone:= false
   else
-  Ia:= Ia*Perror;
+  Ia:= Ia*result.Perror;
   //% Remaining performance parameters
   //% Current density
   Ja:= Ia/Aac;
   //% Power and efficiency
   Pin:= Pwr+Pc+Pa+Pwind;
-  eff:= Pwr/Pin;
-  pf:= cos(psi);
-  fprintf:= 'pm2calc complete: Ready.\n';
+  result.eff:= Pwr/Pin;
+  result.pf:= cos(psi);
+  result.fprintf:= 'pm2calc complete: Ready.\n';
   //"%Jo nathan Rucker, MIT Thesis
   //"%M ay 2005
   //"%P rogram: pm2output
@@ -322,17 +315,17 @@ begin
   //"%Pr ogram developed from J.L. Kirtley script with permission
   //"%M UST RUN pm2input and pm2calc PRIOR TO RUNNING pm2output
   //"%V ariables for output display
-  Pout:=Pwr/1e3;
-  Jao:=Ja/1e4;
-  Pco:=Pc/1e3;
-  Pwindo:= Pwind/1e3;
-  Pao:=Pa/1e3;
-  wso:= ws*1000;
-  hso:= hs* 1000;
-  wto:= wt* 1000;
-  dco:= dc* 1000;
-  Lso:=Ls* 1000;
-  hmo:= hm* 1000;
-  go:= g*1000;
+  result.Pout:=Pwr/1e3;
+  result.Jao:=Ja/1e4;
+  result.Pco:=Pc/1e3;
+  result.Pwindo:= Pwind/1e3;
+  result.Pao:=Pa/1e3;
+  result.wso:= ws*1000;
+  result.hso:= hs* 1000;
+  result.wto:= wt* 1000;
+  result.dco:= result.dc* 1000;
+  result.Lso:= result.Ls* 1000;
+  result.hmo:= hm* 1000;
+  result.go:= g*1000;
 end;
 end.
