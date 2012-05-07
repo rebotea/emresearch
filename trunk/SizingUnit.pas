@@ -86,7 +86,6 @@ function MagneticGapFactor(Pwr, Nc, sigst, tol, le2, kw, ks, thmrad, R, hm, g, A
 function MagneticFluxInternalVoltage(thmrad, thm, pi, Bg, kg, p, Rs, Lst, Na, kw, ks, omega, Ea: extended): MFIOutput;
 function InductancesReactances(Pwr, p, m, Nsp, rhom, rhos, rhoair, psi, tol, Pa, Ra, lel, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended): IROutput;
 
-
 implementation
 
 function ElectricalFrequencyRotorRadius(floor, p, q, m, rpm, vtip, Nsp, thsk: extended): TEFRROutput;

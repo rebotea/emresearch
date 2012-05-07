@@ -39,14 +39,18 @@ begin
 
 //Pwr:=2*pi*R*Lst*stress*vtip ;
 //Lst:=2*LovD*R;
+
 hscm:=hs*100;
-R:=sqrt(Pwr/(2*pi*(LovD*2)*vtip*stress*conv1*conv2));
+R:=sqrt(Pwr/(2*pi*(LovD*2)*vtip*stress*conv1*conv2+ 0.001 ));
 D:=2*R;
 Lst:=LovD*D;
 
 // Speed
+
 omega:=(p*vtip)/R;
+
 //f:=omega/(2*pi);
+
 rpm:=(60*f)/p;
 
 // Current densities
