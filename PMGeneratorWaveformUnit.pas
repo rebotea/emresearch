@@ -62,8 +62,6 @@ type
     function CalcMFlx_InV(Bg, Na: Extended): HRESULT;
     function Normalized(): HRESULT;
     function GenWave(): HRESULT;
-
-
   public
     Constructor Create;
     Destructor Destroy; virtual;
