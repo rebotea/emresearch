@@ -5,9 +5,17 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,math,
   Dialogs;
 
-procedure BasicSizingMethod(Pwr,rpm,psi,f, vtip,lovd,stress, p, bg:Extended; out hscm,r,d,lst,omega,kz,ja:extended ) ;
-procedure SizingMethod(Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc:Extended; out m,na,wt,wst,wsb,dc,nsfp,nsct,laz,le2,le1,f,omega,vtip,gama,alfa,kp,kb,kw,ths,ks,rs,ri,r2,r1,kg,ws,taus,kc,ge,cphi,pc,bg,thmrad,b1,lambda,ea,lag,perm,las,
-lam,lslot,as1,le,ls,xs,lac,aac,mac,lmach,rci,rco,dmach,mcb,mct,mc,mm,ms,mser,mtot,ra,bt,bb,pcb,pct,pc1,ia,xa,pa,omegam,rey,cf,pwind,va,ptemp,pf,eff,pin,ja:Extended );
+procedure BasicSizingMethod(Pwr, rpm, psi, f, vtip, lovd, stress, p, bg:Extended;
+  out hscm, r, d, lst, omega, kz, ja: Extended);
+
+procedure SizingMethod(Pwr, rpm, psi, R, hm, Lst, p, Br, thm, thsk, q, Ns, Nsp,
+  g, tfrac, hs, hd, wd, syrat, Nc, lams, sigst, rhos, rhom, rhoc: Extended;
+  out m, na, wt, wst, wsb, dc, nsfp, nsct, laz, le2, le1, f, omega, vtip, gama,
+  alfa, kp, kb, kw, ths, ks, rs, ri, r2, r1, kg, ws, taus, kc, ge, cphi, pc, bg,
+  thmrad, b1, lambda, ea, lag, perm, las, lam, lslot, as1, le, ls, xs, lac, aac,
+  mac, lmach, rci, rco, dmach, mcb, mct, mc, mm, ms, mser, mtot, ra, bt, bb, pcb,
+  pct, pc1, ia, xa, pa, omegam, rey, cf, pwind, va, ptemp, pf, eff, pin, ja :Extended);
+
     const
      hs = 0.015; // Assume slot depth of 15 mm
      lams = 0.5; // Assume slot fill fraction
@@ -27,39 +35,28 @@ lam,lslot,as1,le,ls,xs,lac,aac,mac,lmach,rci,rco,dmach,mcb,mct,mc,mm,ms,mser,mto
      kr = 1.05;
      kl = 0.95;
 
-
-
 implementation
 
-
-
-procedure BasicSizingMethod(Pwr,rpm,psi,f, vtip,lovd,stress, p, bg:Extended; out hscm,r,d,lst,omega,kz,ja:extended ) ;
+//Õ¿œ»—¿“‹  ŒÃÃ≈Õ“¿–»»
+procedure BasicSizingMethod(Pwr, rpm, psi, f, vtip, lovd, stress, p, bg: Extended;
+  out hscm, r, d, lst, omega, kz, ja: Extended);
 begin
-
-
-//Pwr:=2*pi*R*Lst*stress*vtip ;
-//Lst:=2*LovD*R;
-
-hscm:=hs*100;
-R:=sqrt(Pwr/(2*pi*(LovD*2)*vtip*stress*conv1*conv2+ 0.001 ));
-D:=2*R;
-Lst:=LovD*D;
-
+  //Pwr:=2*pi*R*Lst*stress*vtip ;
+  //Lst:=2*LovD*R;
+  hscm:= hs * 100;
+  R:=sqrt(Pwr / (2 * pi * (LovD * 2) * vtip * stress * conv1 * conv2 + 0.001) ); //Õ¿œ»—¿“‹ «¿Ÿ»“” Õ¿ ¬¬Œƒ LOVD, VTIP, STRESS
+  D:= 2 * R;
+  Lst:= lovd * D;
 // Speed
-
-omega:=(p*vtip)/R;
-
-//f:=omega/(2*pi);
-
-rpm:=(60*f)/p;
-
+  omega:= (p * vtip) / R;//Õ¿œ»—¿“‹ «¿Ÿ»“” Õ¿ ¬¬Œƒ p
+  //f:=omega/(2*pi);
+  rpm:= (60 * f) / p;
 // Current densities
-Kz:=(stress*conv2)/(Bg*100);
-Ja:=10*Kz/(hscm*lams);
+  Kz:=(stress * conv2) / (Bg * 100);
+  Ja:=10 * Kz / (hscm * lams);
 end;
 
-
-
+//—ƒ≈À¿“‹  Œƒ ◊»“¿¡≈À‹Õ€Ã(“¿  ∆≈  ¿  ¬ BasicSizingMethod)
 procedure SizingMethod(Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc:Extended; out m,na,wt,wst,wsb,dc,nsfp,nsct,laz,le2,le1,f,omega,vtip,gama,alfa,kp,kb,kw,ths,ks,rs,ri,r2,r1,kg,ws,taus,kc,ge,cphi,pc,bg,thmrad,b1,lambda,ea,lag,perm,las,
 lam,lslot,as1,le,ls,xs,lac,aac,mac,lmach,rci,rco,dmach,mcb,mct,mc,mm,ms,mser,mtot,ra,bt,bb,pcb,pct,pc1,ia,xa,pa,omegam,rey,cf,pwind,va,ptemp,pf,eff,pin,ja:Extended );
 var i:integer;

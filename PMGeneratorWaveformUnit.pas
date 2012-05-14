@@ -291,7 +291,7 @@ begin
 end;
 
 // Harmonic  winding  and  skew factors
-// Обмотка и коэффицинт скольжения
+// Парамтеры обмотки и коэффицинт скольжения
 procedure AppendixG.HarmonicWind_SkFact(Nsct, Nsfp: Extended);
 var
   gama, alfa, ths: Extended;
