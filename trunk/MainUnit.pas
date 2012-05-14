@@ -192,34 +192,37 @@ implementation
 {$R *.dfm}
 
 procedure TForm3.Button1Click(Sender: TObject);
-var Pwr,rpm,psi,f, vtip,lovd,stress, p, bg:Extended;
-    hscm,r,d,lst,omega,kz,ja:extended;
+var
+  Pwr, rpm, psi, f, vtip, lovd, stress, p, bg, hscm, r, d, lst, omega, kz, ja: Extended;
 begin
-
-  pwr:= StrToFloat(Edit1.Text);
-  rpm:=StrToFloat(Edit2.Text);
+  Pwr:= StrToFloat(Edit1.Text);
+  rpm:= StrToFloat(Edit2.Text);
   psi:= StrToFloat(Edit9.Text);
   f:= StrToFloat(Edit3.Text);
-  vtip:=StrToFloat(Edit4.Text);
-  lovd:=StrToFloat(Edit5.Text);
+  vtip:= StrToFloat(Edit4.Text);
+  lovd:= StrToFloat(Edit5.Text);
   stress:= StrToFloat(Edit6.Text);
   p:= StrToFloat(Edit7.Text);
-  bg:=StrToFloat(Edit8.Text);
-  BasicSizingMethod(Pwr,rpm,psi,f, vtip,lovd,stress, p, bg,hscm,r,d,lst,omega,kz,ja);
+  bg:= StrToFloat(Edit8.Text);
 
-  Label31.Caption:=Label31.Caption+ floattostr(hscm);
-  Label32.Caption:=Label32.Caption+floattostr(r);
-  Label33.Caption:=Label33.Caption+floattostr(d);
-  Label34.Caption:=Label34.Caption+floattostr(lst);
-  Label35.Caption:=Label35.Caption+floattostr(omega);
-  Label36.Caption:=Label36.Caption+floattostr(kz);
-  Label37.Caption:=Label37.Caption+floattostr(ja);
+  BasicSizingMethod(Pwr, rpm, psi, f, vtip, lovd, stress, p, bg, hscm, r, d, lst,
+      omega, kz, ja);
+  //Label1.Left:=Label1.Left + round(ja);
+
+  Label31.Caption:= Label31.Caption + floattostr(hscm);
+  Label32.Caption:= Label32.Caption + floattostr(r);
+  Label33.Caption:= Label33.Caption + floattostr(d);
+  Label34.Caption:= Label34.Caption + floattostr(lst);
+  Label35.Caption:= Label35.Caption + floattostr(omega);
+  Label36.Caption:= Label36.Caption + floattostr(kz);
+  Label37.Caption:= Label37.Caption + floattostr(ja);
 end;
 
 procedure TForm3.Button2Click(Sender: TObject);
-var Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc:Extended;
-    m,na,wt,wst,wsb,dc,nsfp,nsct,laz,le2,le1,f,omega,vtip,gama,alfa,kp,kb,kw,ths,ks,rs,ri,r2,r1,kg,ws,taus,kc,ge,cphi,pc,bg,thmrad,b1,lambda,ea,lag,perm,las,
-lam,lslot,as1,le,ls,xs,lac,aac,mac,lmach,rci,rco,dmach,mcb,mct,mc,mm,ms,mser,mtot,ra,bt,bb,pcb,pct,pc1,ia,xa,pa,omegam,rey,cf,pwind,va,ptemp,pf,eff,pin,ja:Extended;
+var
+  Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc:Extended;
+  m,na,wt,wst,wsb,dc,nsfp,nsct,laz,le2,le1,f,omega,vtip,gama,alfa,kp,kb,kw,ths,ks,rs,ri,r2,r1,kg,ws,taus,kc,ge,cphi,pc,bg,thmrad,b1,lambda,ea,lag,perm,las,
+  lam,lslot,as1,le,ls,xs,lac,aac,mac,lmach,rci,rco,dmach,mcb,mct,mc,mm,ms,mser,mtot,ra,bt,bb,pcb,pct,pc1,ia,xa,pa,omegam,rey,cf,pwind,va,ptemp,pf,eff,pin,ja:Extended;
 begin
   pwr:= StrToFloat(Edit1.Text);
   rpm:=StrToFloat(Edit2.Text);
@@ -248,26 +251,35 @@ begin
   rhoc:= StrToFloat(Edit30.Text);
   p:= StrToFloat(Edit8.Text);
 
-  SizingMethod(Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc,m,na,wt,wst,wsb,dc,nsfp,nsct,laz,le2,le1,f,omega,vtip,gama,alfa,kp,kb,kw,ths,ks,rs,ri,r2,r1,kg,ws,taus,kc,ge,cphi,pc,bg,thmrad,b1,lambda,ea,lag,perm,las,
-lam,lslot,as1,le,ls,xs,lac,aac,mac,lmach,rci,rco,dmach,mcb,mct,mc,mm,ms,mser,mtot,ra,bt,bb,pcb,pct,pc1,ia,xa,pa,omegam,rey,cf,pwind,va,ptemp,pf,eff,pin,ja );
+  SizingMethod(Pwr, rpm, psi, R, hm, Lst, p, Br, thm, thsk, q, Ns, Nsp, g, tfrac,
+      hs, hd, wd, syrat, Nc, lams, sigst, rhos, rhom, rhoc, m, na, wt, wst, wsb,
+      dc, nsfp, nsct, laz, le2, le1, f, omega, vtip, gama, alfa, kp, kb, kw, ths,
+      ks, rs, ri, r2, r1, kg, ws, taus, kc, ge, cphi, pc, bg, thmrad, b1, lambda,
+      ea, lag, perm, las, lam, lslot, as1, le, ls, xs, lac, aac, mac, lmach, rci,
+      rco, dmach, mcb, mct, mc, mm, ms, mser, mtot, ra, bt, bb, pcb, pct, pc1, ia,
+      xa, pa, omegam, rey, cf, pwind, va, ptemp, pf, eff, pin, ja);// ŒÕ –¿¡Œ“¿≈“, ÕŒ Õ≈Œ¡’Œƒ»ÃŒ Œ –”√À»“‹ –≈«”À‹“¿“€ ƒŒ Œœ–≈ƒ≈À≈≈ÕŒ√Œ œŒ–ﬂƒ ¿(«¿¬»—»“ Œ“ œŒ–ﬂƒ ¿ –≈«”À‹“¿“¿)
+      //Õ¿œ»—¿“‹ œ–Œ¬≈– ” ¬’ŒƒÕ€’ ƒ¿ÕÕ€’
+      //Õ¿œ»—¿“‹ Œ¡–¿¡Œ“ ” »— Àﬁ◊»“≈À‹Õ€’ —»“”¿÷»…
 
-  Label35.Caption:=floattostr(omega);
-  Label37.Caption:=floattostr(ja);
-  Label38.Caption:=Label38.Caption+floattostr(m);
-  Label39.Caption:=Label39.Caption+floattostr(na);
-  Label40.Caption:=Label40.Caption+floattostr(wt);
-  Label41.Caption:=Label41.Caption+floattostr(wst);
-  Label42.Caption:=Label42.Caption+floattostr(wsb);
-  Label43.Caption:=Label43.Caption+floattostr(dc);
-  Label44.Caption:=Label44.Caption+floattostr(nsfp);
-  Label45.Caption:=Label45.Caption+floattostr(nsct);
-  Label46.Caption:=Label46.Caption+floattostr(laz);
-  Label47.Caption:=Label47.Caption+floattostr(le2);
-  Label48.Caption:=Label48.Caption+floattostr(le1);
-  Label49.Caption:=Label49.Caption+floattostr(f);
-  Label50.Caption:=Label50.Caption+floattostr(vtip);
-  Label51.Caption:=Label51.Caption+floattostr(gama);
-  Label52.Caption:=Label52.Caption+floattostr(alfa);
+  // œŒƒœ»—¿“‹  ŒÃÃ≈Õ“¿–»»
+  Label35.Caption:= FloatToStr(omega);
+  Label37.Caption:= FloatToStr(ja);
+  Label38.Caption:= Label38.Caption + FloatToStr(m);
+  Label39.Caption:= Label39.Caption + FloatToStr(na);
+  Label40.Caption:= Label40.Caption + FloatToStr(wt);
+  Label41.Caption:= Label41.Caption + FloatToStr(wst);
+  Label42.Caption:= Label42.Caption + FloatToStr(wsb);
+  Label43.Caption:= Label43.Caption + FloatToStr(dc);
+  Label44.Caption:= Label44.Caption + FloatToStr(nsfp);
+  Label45.Caption:= Label45.Caption + FloatToStr(nsct);
+  Label46.Caption:= Label46.Caption + FloatToStr(laz);
+  Label47.Caption:= Label47.Caption + FloatToStr(le2);
+  Label48.Caption:= Label48.Caption + FloatToStr(le1);
+  Label49.Caption:= Label49.Caption + FloatToStr(f);
+  Label50.Caption:= Label50.Caption + FloatToStr(vtip);
+  Label51.Caption:= Label51.Caption + floattostr(gama);
+
+  Label52.Caption:=Label52.Caption+floattostr(alfa);//Œ“–≈ƒ¿ “»–Œ¬¿“‹  Œƒ “¿ , ◊“Œ¡€ ŒÕ —“¿À ◊»“¿¡≈À≈Õ
   Label53.Caption:=Label53.Caption+floattostr(kp);
   Label54.Caption:=Label54.Caption+floattostr(kb);
   Label55.Caption:=Label55.Caption+floattostr(kw);
