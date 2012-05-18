@@ -18,7 +18,7 @@ object Form3: TForm3
     Top = 0
     Width = 1137
     Height = 966
-    ActivePage = TabSheet1
+    ActivePage = TabSheet6
     Align = alTop
     TabOrder = 0
     object TabSheet6: TTabSheet
@@ -650,7 +650,6 @@ object Form3: TForm3
         Align = alTop
         Caption = #1042#1093#1086#1076#1085#1099#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
         TabOrder = 1
-        ExplicitTop = -6
         object Label1: TLabel
           Left = 32
           Top = 32
