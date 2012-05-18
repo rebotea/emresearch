@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs,BasicSizingMethodUnit,{ SizingUnit, BodePlotUnit, RetSlStressConclUnit, PMGeneratorWaveformUnit, RotorlossesUnit,}
+  Dialogs,BasicSizingMethodUnit, RetSlStressConclUnit, PMGeneratorWaveformUnit,{ SizingUnit, BodePlotUnit, RotorlossesUnit,}
   StdCtrls, ComCtrls;
 
 type

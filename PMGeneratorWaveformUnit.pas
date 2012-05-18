@@ -63,7 +63,10 @@ type
     function Normalized(): HRESULT;
     function GenWave(): HRESULT;
   public
-    Constructor Create;
+    Constructor Create(in_Pwr, in_rpm, in_psi, in_f, in_omega, in_vtip,
+    in_lambda, in_Ea, in_R, in_hm, in_Lst, in_p, in_Br, in_thm, in_thsk, in_q,
+    in_m, in_Ns, in_Nsp, in_g, in_ge, in_tfrac, in_hs, in_hd, in_wd, in_syrat,
+    in_Nc, in_lams, in_sigst, in_Kc: Extended);
     Destructor Destroy; virtual;
     property GetReqPower: Extended read Pwr;
     function SetGeneralVariable(ReqPower, Speed, PowFAngle, El_f_Hz, El_f_Rps, TSpeed, FlLink, RMSInV: Extended): HRESULT;
@@ -77,207 +80,192 @@ const
 { AppendixG }
 implementation
 
-function AppendixG.VectorSizing(V: TVector): TVector;
-begin
-  while V[Length(V) - 1] = 0 do
-   SetLength(V, Length(V) - 1);
-  Result:= V;
-end;
-
-function AppendixG.AProgressive(x, s, sum: Extended): TVector;
-var
-  i: Integer;
-  Cx: Extended;
-  Result1: TVector;
-begin
-  i:= 0;
-  SetLength(Result1, Round((abs(sum) - abs(x)) / s + 2));
-  while (sum >= RoundTo(x, -4)) do
+  function AppendixG.VectorSizing(V: TVector): TVector;
   begin
-    Result1[i]:= x;
-    x:= x + s;
-    inc(i);
+    while V[Length(V) - 1] = 0 do
+     SetLength(V, Length(V) - 1);
+    Result:= V;
   end;
-  Result1:= VectorSizing(Result1);
-end;
-
-function AppendixG.VMul(x: Extended; V: TVector): Tvector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= V[i] * x;
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VMul1(x, V: TVector): Tvector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= V[i] * x[i];
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VDiv(x: Extended; V: TVector): TVector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= V[i] / x;
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VDiv1(x, V: TVector): TVector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= V[i] / x[i];
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VPow(x: Extended; V: TVector): TVector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= power(V[i], x);
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VPow1(x, V: TVector): TVector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= power(x[i], V[i]);
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VMinus(x: Extended; V: TVector): TVector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= V[i] - x;
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VMinus1(x, V: TVector): TVector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= V[i] - x[i];
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VPlus(x: Extended; V: TVector): TVector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= V[i] + x;
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VPlus1(x, V: TVector): TVector;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(V));
-  i:= 0;
-  repeat
-    Result[i]:= V[i] + x[i];
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VSin(V: TVector): TVector;
-var
-  i: Integer;
-begin
-  i:= 0;
-  repeat
-    Result[i]:= sin(V[i]);
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.VAbs(V: TVector): TVector;
-var
-  i: Integer;
-begin
-  i:= 0;
-  repeat
-    Result[i]:= abs(V[i]);
-    inc(i);
-  until i = Length(V);
-  Result:= VectorSizing(Result);
-end;
-
-function AppendixG.SetGeneralVariable(ReqPower, Speed, PowFAngle, El_f_Hz,
-  El_f_Rps, TSpeed, FlLink, RMSInV: Extended): HRESULT;
-begin
-  Pwr:= ReqPower;
-  rpm:= Speed;
-  psi:= PowFAngle;
-  f:= El_f_Hz;
-  omega:= El_f_Rps;
-  vtip:= TSpeed;
-  lambda:= FlLink;
-  Ea:= RMSInV;
-end;
-
-function AppendixG.SetLengthZero(Size: Integer): TVector;
-var
-  Massive: TVector;
-  I: Integer;
-begin
-  SetLength(Massive, Size);
-  for I := 0 to Length(Massive) do
-   Massive[I]:= 0;
-  Result:= Massive;
-end;
+  function AppendixG.AProgressive(x, s, sum: Extended): TVector;
+  var
+    i: Integer;
+    Cx: Extended;
+    Result1: TVector;
+  begin
+    i:= 0;
+    SetLength(Result1, Round((abs(sum) - abs(x)) / s + 2));
+    while (sum >= RoundTo(x, -4)) do
+    begin
+      Result1[i]:= x;
+      x:= x + s;
+      inc(i);
+    end;
+    Result1:= VectorSizing(Result1);
+  end;
+  function AppendixG.VMul(x: Extended; V: TVector): Tvector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= V[i] * x;
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VMul1(x, V: TVector): Tvector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= V[i] * x[i];
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VDiv(x: Extended; V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= V[i] / x;
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VDiv1(x, V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= V[i] / x[i];
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VPow(x: Extended; V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= power(V[i], x);
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VPow1(x, V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= power(x[i], V[i]);
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VMinus(x: Extended; V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= V[i] - x;
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VMinus1(x, V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= V[i] - x[i];
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VPlus(x: Extended; V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= V[i] + x;
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VPlus1(x, V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, Length(V));
+    i:= 0;
+    repeat
+      Result[i]:= V[i] + x[i];
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VSin(V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    i:= 0;
+    repeat
+      Result[i]:= sin(V[i]);
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.VAbs(V: TVector): TVector;
+  var
+    i: Integer;
+  begin
+    i:= 0;
+    repeat
+      Result[i]:= abs(V[i]);
+      inc(i);
+    until i = Length(V);
+    Result:= VectorSizing(Result);
+  end;
+  function AppendixG.SetGeneralVariable(ReqPower, Speed, PowFAngle, El_f_Hz,
+    El_f_Rps, TSpeed, FlLink, RMSInV: Extended): HRESULT;
+  begin
+    Pwr:= ReqPower;
+    rpm:= Speed;
+    psi:= PowFAngle;
+    f:= El_f_Hz;
+    omega:= El_f_Rps;
+    vtip:= TSpeed;
+    lambda:= FlLink;
+    Ea:= RMSInV;
+  end;
+  function AppendixG.SetLengthZero(Size: Integer): TVector;
+  var
+    Massive: TVector;
+    I: Integer;
+  begin
+    SetLength(Massive, Size);
+    for I := 0 to Length(Massive) do
+     Massive[I]:= 0;
+    Result:= Massive;
+  end;
 
 
 // Harmonics  to be evaluated
@@ -461,9 +449,19 @@ begin
   Result:= kgn;
 end;
 
-constructor AppendixG.Create;
+constructor AppendixG.Create(in_Pwr, in_rpm, in_psi, in_f, in_omega, in_vtip,
+    in_lambda, in_Ea, in_R, in_hm, in_Lst, in_p, in_Br, in_thm, in_thsk, in_q,
+    in_m, in_Ns, in_Nsp, in_g, in_ge, in_tfrac, in_hs, in_hd, in_wd, in_syrat,
+    in_Nc, in_lams, in_sigst, in_Kc: Extended);
 begin
   inherited Create;
+  Pwr:= in_Pwr;  rpm:= in_rpm;  psi:= in_psi;  f:= in_f;  omega:= in_omega;
+  vtip:= in_vtip;  lambda:= in_lambda;  Ea:= in_Ea;  R:= in_R;  hm:= in_hm;
+  Lst:= in_Lst;  p:= in_p;  Br:= in_Br; thm:= in_thm; thsk:= in_thsk; q:= in_q;
+  m:= in_m; Ns:= in_Ns; g:= in_g; ge:= in_ge; tfrac:= in_tfrac;  hs:= in_hs;
+  hd:= in_hd;  wd:= in_wd;  syrat:= in_syrat;  Nc:= in_Nc;  lams:= in_lams;
+  sigst:= in_sigst;  Kc:= in_Kc;
+
 end;
 
 destructor AppendixG.Destroy;
