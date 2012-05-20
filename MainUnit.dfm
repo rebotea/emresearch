@@ -18,7 +18,7 @@ object Form3: TForm3
     Top = 0
     Width = 1137
     Height = 966
-    ActivePage = TabSheet6
+    ActivePage = TabSheet3
     Align = alTop
     TabOrder = 0
     object TabSheet6: TTabSheet
@@ -1162,6 +1162,16 @@ object Form3: TForm3
         Align = alTop
         Caption = #1042#1093#1086#1076#1085#1099#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
         TabOrder = 1
+        ExplicitTop = -6
+        object Button3: TButton
+          Left = 941
+          Top = 18
+          Width = 177
+          Height = 25
+          Caption = 'PMGeneratorWaveform'
+          TabOrder = 0
+          OnClick = Button3Click
+        end
       end
     end
     object TabSheet4: TTabSheet

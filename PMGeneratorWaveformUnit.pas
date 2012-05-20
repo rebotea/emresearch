@@ -40,6 +40,8 @@ type
     n, np, w, freq, kgn, kwn, ksn, Eanorm, Ean, Bout, Eaout, Bn: Tvector;
     Rs,  THD: Extended;
 
+
+
     function VectorSizing(V: TVector): TVector;
     function AProgressive(x, s, sum: Extended): TVector;
     function VMul(x: Extended; V: TVector): Tvector;
@@ -55,10 +57,12 @@ type
     function VSin(V: TVector): TVector;
     function VAbs(V: TVector): TVector;
     function SetLengthZero(Size: Integer): TVector;
+    function SetGeneralVariable(ReqPower, Speed, PowFAngle, El_f_Hz, El_f_Rps,
+      TSpeed, FlLink, RMSInV: Extended): HRESULT;
   protected
     procedure EvaluatedToHarmonics(var n, np, w, freq: TVector);
     procedure HarmonicWind_SkFact(Nsct, Nsfp: Extended);
-    function CalcMgapFtrs(np: TVector): TVector;
+    function CalcMgapFtrs: TVector;
     function CalcMFlx_InV(Bg, Na: Extended): HRESULT;
     function Normalized(): HRESULT;
     function GenWave(): HRESULT;
@@ -68,9 +72,13 @@ type
     in_m, in_Ns, in_Nsp, in_g, in_ge, in_tfrac, in_hs, in_hd, in_wd, in_syrat,
     in_Nc, in_lams, in_sigst, in_Kc: Extended);
     Destructor Destroy; virtual;
-    property GetReqPower: Extended read Pwr;
-    function SetGeneralVariable(ReqPower, Speed, PowFAngle, El_f_Hz, El_f_Rps, TSpeed, FlLink, RMSInV: Extended): HRESULT;
+    property SetElFreq: Extended write f;
+    property SetLambda: Extended write lambda;
+    property SetEa: Extended write Ea;
+    property SetKc: Extended write Kc;
+
     function PlotWaveforms(CLine_1Sr, CLine_1Sr2, CBar_2Sr: TChart): HRESULT;
+    function CalcWaveform: HRESULT;
 end;
 
 const
@@ -296,7 +304,7 @@ end;
 
 // Calculate  magnetic  gap  factor
 // Расчет коэффициента разрыва
-function AppendixG.CalcMgapFtrs(np: TVector): TVector;
+function AppendixG.CalcMgapFtrs: TVector;
 var
   Ri, R1, R2: Extended;
 begin
@@ -304,7 +312,7 @@ begin
   Ri:= R;
   R1:= R;
   R2:= R + hm;
-  kgn:=
+  Result:=
   VPlus1
   (
     Vmul1
@@ -446,7 +454,18 @@ begin
       )
     )
   );
-  Result:= kgn;
+
+end;
+
+function AppendixG.CalcWaveform: HRESULT;
+begin
+  EvaluatedToHarmonics(n, np, w, freq);
+  HarmonicWind_SkFact(Round(Ns/(2*p)) - Nsp, Round(Ns/(2*p)));
+  kgn:= CalcMgapFtrs;
+  CalcMFlx_InV(Bg, 2 * p * m * Nc);
+  Normalized;
+  GenWave;
+  //PlotWaveforms()
 end;
 
 constructor AppendixG.Create(in_Pwr, in_rpm, in_psi, in_f, in_omega, in_vtip,

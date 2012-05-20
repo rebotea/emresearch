@@ -174,8 +174,10 @@ type
     Label112: TLabel;
     Label113: TLabel;
     Label114: TLabel;
+    Button3: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
 
 
   private
@@ -348,5 +350,13 @@ end;
 
 
 
+
+procedure TForm3.Button3Click(Sender: TObject);
+var
+  G: AppendixG;
+begin
+  G.Create();
+  G.
+end;
 
 end.
