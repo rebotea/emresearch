@@ -309,13 +309,9 @@ begin
   MagnetDimensionsToothWidthAirGapFluxDensity(Ns, PC, R, Ws, Bg, Bsat, ge, eratio, g, Br, tol );
   Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, le1, Nsct, hs, Bsat);
  // MagneticGapFactor(Nc, sigst, tol, le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds);
-  ShowMessage('ok 3');
-
   MagneticFluxInternalVoltage(thmrad, thm, pi, Bg, kg, p, Rs, Lst, Na, kw, ks, omega, Ea);
-   ShowMessage('ok 1');
-
   InductancesReactances(p, m, Nsp, rhom, rhos, rhoair, psi, tol, Pa, Ra, le1, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot);
-    ShowMessage('vse ok');
+
   Label31.Caption:=Label31.Caption+ floattostr(hscm);
   Label32.Caption:=Label32.Caption+floattostr(r);
   Label33.Caption:=Label33.Caption+floattostr(d);
