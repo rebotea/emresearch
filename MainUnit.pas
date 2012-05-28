@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs,BasicSizingMethodUnit, RetSlStressConclUnit, PMGeneratorWaveformUnit,{ SizingUnit, BodePlotUnit, RotorlossesUnit,}
+  Dialogs,BasicSizingMethodUnit, SizingUnit, BodePlotUnit, RetSlStressConclUnit, PMGeneratorWaveformUnit, RotorlossesUnit,
   StdCtrls, ComCtrls;
 
 type
@@ -174,10 +174,53 @@ type
     Label112: TLabel;
     Label113: TLabel;
     Label114: TLabel;
-    Button3: TButton;
+    Label115: TLabel;
+    Edit31: TEdit;
+    Label116: TLabel;
+    Label117: TLabel;
+    Label118: TLabel;
+    Label119: TLabel;
+    Label120: TLabel;
+    Label121: TLabel;
+    Label122: TLabel;
+    Label123: TLabel;
+    Label124: TLabel;
+    Label125: TLabel;
+    Label126: TLabel;
+    Label127: TLabel;
+    Label128: TLabel;
+    Label129: TLabel;
+    Label130: TLabel;
+    Label131: TLabel;
+    Label132: TLabel;
+    Label133: TLabel;
+    Label134: TLabel;
+    Label135: TLabel;
+    Label136: TLabel;
+    Label137: TLabel;
+    Label138: TLabel;
+    Label139: TLabel;
+    Label140: TLabel;
+    Label141: TLabel;
+    Label142: TLabel;
+    Label143: TLabel;
+    Label151: TLabel;
+    Label152: TLabel;
+    Label153: TLabel;
+    Label154: TLabel;
+    Label155: TLabel;
+    Label156: TLabel;
+    Label157: TLabel;
+    Label144: TLabel;
+    Label145: TLabel;
+    Label146: TLabel;
+    Label147: TLabel;
+    Label148: TLabel;
+    Label149: TLabel;
+    Label150: TLabel;
+    Edit32: TEdit;
+    Label158: TLabel;
     procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
 
 
   private
@@ -194,42 +237,27 @@ implementation
 {$R *.dfm}
 
 procedure TForm3.Button1Click(Sender: TObject);
-var
-  Pwr, rpm, psi, f, vtip, lovd, stress, p, bg, hscm, r, d, lst, omega, kz, ja: Extended;
+var Pwr,rpm,psi,f, vtip,lovd,stress, p, bg:Extended;
+    hscm,r,d,lst,omega,kz,tol,ja:extended;
+    hm,Br,thm,thsk,q,Ns,Nsp,FO, BO,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc:Extended;
+    m,na,wt,wst,wsb,dc,nsfp,nsct,laz,le2,le1,gama,alfa,kp,kb,kw,ths,ks,rs,ri,r2,r1,kg,ws,taus,kc,ge,cphi,pc,thmrad,b1,lambda,ea,lag,perm,las,
+    lam,lslot,as1,le,ls,xs,lac,aac,epsb,epsf,mac,lmach,rci,rco,dmach,mcb,mct,mc,mm,ms,mser,mtot,ra,bt,bb,pcb,pct,pc1,ia,xa,pa,omegam,rey,cf,pwind,va,ptemp,pf,eff,pin:Extended;
+    floor,eratio,perr :extended;
+    thme, alpham, Ds, K1, Kr, murec: Extended;
+    notdone: boolean;
+    error1, Ptemp1,  Pgap, k, ke, ki,a,rc,  i, McbperL, MctperL, McperL, PcbperL, PctperL, PcperL, P0, B0 : extended;
+    Perror, Bsat, rhoair, nuair, muO, Pout,  Jao, Pco,pi,  Pwindo, Pao, wso, hso, wto, dco, Lso, hmo, go: extended;
 begin
-  Pwr:= StrToFloat(Edit1.Text);
-  rpm:= StrToFloat(Edit2.Text);
-  psi:= StrToFloat(Edit9.Text);
-  f:= StrToFloat(Edit3.Text);
-  vtip:= StrToFloat(Edit4.Text);
-  lovd:= StrToFloat(Edit5.Text);
-  stress:= StrToFloat(Edit6.Text);
-  p:= StrToFloat(Edit7.Text);
-  bg:= StrToFloat(Edit8.Text);
 
-  BasicSizingMethod(Pwr, rpm, psi, f, vtip, lovd, stress, p, bg, hscm, r, d, lst,
-      omega, kz, ja);
-  //Label1.Left:=Label1.Left + round(ja);
-
-  Label31.Caption:= Label31.Caption + floattostr(hscm);
-  Label32.Caption:= Label32.Caption + floattostr(r);
-  Label33.Caption:= Label33.Caption + floattostr(d);
-  Label34.Caption:= Label34.Caption + floattostr(lst);
-  Label35.Caption:= Label35.Caption + floattostr(omega);
-  Label36.Caption:= Label36.Caption + floattostr(kz);
-  Label37.Caption:= Label37.Caption + floattostr(ja);
-end;
-
-procedure TForm3.Button2Click(Sender: TObject);
-var
-  Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc:Extended;
-  m,na,wt,wst,wsb,dc,nsfp,nsct,laz,le2,le1,f,omega,vtip,gama,alfa,kp,kb,kw,ths,ks,rs,ri,r2,r1,kg,ws,taus,kc,ge,cphi,pc,bg,thmrad,b1,lambda,ea,lag,perm,las,
-  lam,lslot,as1,le,ls,xs,lac,aac,mac,lmach,rci,rco,dmach,mcb,mct,mc,mm,ms,mser,mtot,ra,bt,bb,pcb,pct,pc1,ia,xa,pa,omegam,rey,cf,pwind,va,ptemp,pf,eff,pin,ja:Extended;
-begin
   pwr:= StrToFloat(Edit1.Text);
   rpm:=StrToFloat(Edit2.Text);
-  psi:= StrToFloat(Edit3.Text);
-
+  f:= StrToFloat(Edit3.Text);
+  vtip:=StrToFloat(Edit4.Text);
+  lovd:=StrToFloat(Edit5.Text);
+  stress:= StrToFloat(Edit6.Text);
+  p:= StrToFloat(Edit7.Text);
+  bg:=StrToFloat(Edit8.Text);
+  psi:= StrToFloat(Edit9.Text);
   R:= StrToFloat(Edit10.Text);
   hm:= StrToFloat(Edit11.Text);
   Lst:= StrToFloat(Edit12.Text);
@@ -251,37 +279,67 @@ begin
   rhos:= StrToFloat(Edit28.Text);
   rhom:= StrToFloat(Edit29.Text);
   rhoc:= StrToFloat(Edit30.Text);
-  p:= StrToFloat(Edit8.Text);
+  floor:= strToFloat(Edit31.Text);
+  ge:=StrToFloat(Edit19.Text);
+  g:=StrToFloat(Edit19.Text);
+  tol:=1e-2;
+  notdone:= true;
+  thme:= 1;
+  FO:= 1000; // Base freuency, 60 Hz
+  BO:= 10; // Base flux density, 1.0 T
+  epsb:= 2.12;
+  epsf:= 1.68;
+  pi:=3.14;
+  Bsat:=1.65   ;
+  rhoair:=1.205 ;
+  nuair:= 1.5e-5;
+  muO:=4*3.14*1e-7 ;
+  eratio:=StrToFloat(Edit32.text);
 
-  SizingMethod(Pwr, rpm, psi, R, hm, Lst, p, Br, thm, thsk, q, Ns, Nsp, g, tfrac,
-      hs, hd, wd, syrat, Nc, lams, sigst, rhos, rhom, rhoc, m, na, wt, wst, wsb,
-      dc, nsfp, nsct, laz, le2, le1, f, omega, vtip, gama, alfa, kp, kb, kw, ths,
-      ks, rs, ri, r2, r1, kg, ws, taus, kc, ge, cphi, pc, bg, thmrad, b1, lambda,
-      ea, lag, perm, las, lam, lslot, as1, le, ls, xs, lac, aac, mac, lmach, rci,
-      rco, dmach, mcb, mct, mc, mm, ms, mser, mtot, ra, bt, bb, pcb, pct, pc1, ia,
-      xa, pa, omegam, rey, cf, pwind, va, ptemp, pf, eff, pin, ja);// ŒÕ –¿¡Œ“¿≈“, ÕŒ Õ≈Œ¡’Œƒ»ÃŒ Œ –”√À»“‹ –≈«”À‹“¿“€ ƒŒ Œœ–≈ƒ≈À≈≈ÕŒ√Œ œŒ–ﬂƒ ¿(«¿¬»—»“ Œ“ œŒ–ﬂƒ ¿ –≈«”À‹“¿“¿)
-      //Õ¿œ»—¿“‹ œ–Œ¬≈– ” ¬’ŒƒÕ€’ ƒ¿ÕÕ€’
-      //Õ¿œ»—¿“‹ Œ¡–¿¡Œ“ ” »— Àﬁ◊»“≈À‹Õ€’ —»“”¿÷»…
+  BasicSizingMethod(Pwr,rpm,psi,f, vtip,lovd,stress, p, bg,hscm,r,d,lst,omega,kz,ja);
+  try
+   SizingMethod(Pwr,rpm,psi,R,hm,Lst,p,Br,thm,thsk,q,Ns,Nsp,g,tfrac,hs,hd,wd,syrat,Nc,lams,sigst,rhos,rhom,rhoc,m,na,wt,wst,wsb,dc,nsfp,nsct,laz,le2,le1,f,omega,vtip,gama,alfa,kp,kb,kw,ths,ks,rs,ri,r2,r1,kg,ws,taus,kc,ge,cphi,pc,bg,thmrad,b1,lambda,ea,lag,perm,las,
+   lam,lslot,as1,le,ls,xs,lac,aac,mac,lmach,rci,rco,dmach,mcb,mct,mc,mm,ms,mser,mtot,ra,bt,bb,pcb,pct,pc1,ia,xa,pa,omegam,rey,cf,pwind,va,ptemp,pf,eff,pin,ja );
+  except
+   on E:EInvalidOp do ShowMessage('ÕÂÍÓÂÍÚÌÓ ‚‚Â‰ÂÌ˚ ÁÌ‡˜ÂÌËˇ'+E.Message);
+   on E:exception do ShowMessage(E.ClassName);
+  end;
 
-  // œŒƒœ»—¿“‹  ŒÃÃ≈Õ“¿–»»
-  Label35.Caption:= FloatToStr(omega);
-  Label37.Caption:= FloatToStr(ja);
-  Label38.Caption:= Label38.Caption + FloatToStr(m);
-  Label39.Caption:= Label39.Caption + FloatToStr(na);
-  Label40.Caption:= Label40.Caption + FloatToStr(wt);
-  Label41.Caption:= Label41.Caption + FloatToStr(wst);
-  Label42.Caption:= Label42.Caption + FloatToStr(wsb);
-  Label43.Caption:= Label43.Caption + FloatToStr(dc);
-  Label44.Caption:= Label44.Caption + FloatToStr(nsfp);
-  Label45.Caption:= Label45.Caption + FloatToStr(nsct);
-  Label46.Caption:= Label46.Caption + FloatToStr(laz);
-  Label47.Caption:= Label47.Caption + FloatToStr(le2);
-  Label48.Caption:= Label48.Caption + FloatToStr(le1);
-  Label49.Caption:= Label49.Caption + FloatToStr(f);
-  Label50.Caption:= Label50.Caption + FloatToStr(vtip);
-  Label51.Caption:= Label51.Caption + floattostr(gama);
+  ElectricalFrequencyRotorRadius(floor,p,q,m,rpm,vtip,nsp,thsk);
+  MagnetDimensionsToothWidthAirGapFluxDensity(Ns, PC, R, Ws, Bg, Bsat, ge, eratio, g, Br, tol );
+  Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, le1, Nsct, hs, Bsat);
+ // MagneticGapFactor(Nc, sigst, tol, le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds);
+  ShowMessage('ok 3');
 
-  Label52.Caption:=Label52.Caption+floattostr(alfa);//Œ“–≈ƒ¿ “»–Œ¬¿“‹  Œƒ “¿ , ◊“Œ¡€ ŒÕ —“¿À ◊»“¿¡≈À≈Õ
+  MagneticFluxInternalVoltage(thmrad, thm, pi, Bg, kg, p, Rs, Lst, Na, kw, ks, omega, Ea);
+   ShowMessage('ok 1');
+
+  InductancesReactances(p, m, Nsp, rhom, rhos, rhoair, psi, tol, Pa, Ra, le1, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot);
+    ShowMessage('vse ok');
+  Label31.Caption:=Label31.Caption+ floattostr(hscm);
+  Label32.Caption:=Label32.Caption+floattostr(r);
+  Label33.Caption:=Label33.Caption+floattostr(d);
+  Label34.Caption:=Label34.Caption+floattostr(lst);
+  Label35.Caption:=Label35.Caption+floattostr(omega);
+  Label36.Caption:=Label36.Caption+floattostr(kz);
+  Label37.Caption:=Label37.Caption+floattostr(ja);
+  Label35.Caption:=floattostr(omega);
+  Label37.Caption:=floattostr(ja);
+  Label38.Caption:=Label38.Caption+floattostr(m);
+  Label39.Caption:=Label39.Caption+floattostr(na);
+  Label40.Caption:=Label40.Caption+floattostr(wt);
+  Label41.Caption:=Label41.Caption+floattostr(wst);
+  Label42.Caption:=Label42.Caption+floattostr(wsb);
+  Label43.Caption:=Label43.Caption+floattostr(dc);
+  Label44.Caption:=Label44.Caption+floattostr(nsfp);
+  Label45.Caption:=Label45.Caption+floattostr(nsct);
+  Label46.Caption:=Label46.Caption+floattostr(laz);
+  Label47.Caption:=Label47.Caption+floattostr(le2);
+  Label48.Caption:=Label48.Caption+floattostr(le1);
+  Label49.Caption:=Label49.Caption+floattostr(f);
+  Label50.Caption:=Label50.Caption+floattostr(vtip);
+  Label51.Caption:=Label51.Caption+floattostr(gama);
+  Label52.Caption:=Label52.Caption+floattostr(alfa);
   Label53.Caption:=Label53.Caption+floattostr(kp);
   Label54.Caption:=Label54.Caption+floattostr(kb);
   Label55.Caption:=Label55.Caption+floattostr(kw);
@@ -344,19 +402,52 @@ begin
   Label112.Caption:=Label112.Caption+floattostr(pf);
   Label113.Caption:=Label113.Caption+floattostr(eff);
   Label114.Caption:=Label114.Caption+floattostr(pin);
+  Label116.Caption:=Label116.Caption+floattostr(thme);
+  Label117.Caption:=Label117.Caption+floattostr(kp);
+  Label118.Caption:=Label118.Caption+floattostr(hm);
+  Label119.Caption:=Label119.Caption+floattostr(Ds);
+  Label120.Caption:=Label120.Caption+floattostr(K1);
+  Label121.Caption:=Label121.Caption+floattostr(Kr);
+  Label122.Caption:=Label122.Caption+floattostr(murec);
+  Label123.Caption:=Label123.Caption+floattostr(thm);
+  Label124.Caption:=Label124.Caption+floattostr(pwr);
+  Label125.Caption:=Label125.Caption+floattostr(pc);
+  Label126.Caption:=Label126.Caption+floattostr(error1);
+  Label127.Caption:=Label127.Caption+floattostr(Ptemp1);
+  Label128.Caption:=Label128.Caption+floattostr(Pgap);
+  Label129.Caption:=Label129.Caption+floattostr(k);
+  Label130.Caption:=Label130.Caption+floattostr(mtot);
+  Label131.Caption:=Label131.Caption+floattostr(ke);
+  Label132.Caption:=Label132.Caption+floattostr(ki);
+  Label133.Caption:=Label133.Caption+floattostr(i);
+  Label134.Caption:=Label134.Caption+floattostr(McbperL);
+  Label135.Caption:=Label135.Caption+floattostr(MctperL);
+  Label136.Caption:=Label136.Caption+floattostr(McperL);
+  Label137.Caption:=Label137.Caption+floattostr(PcbperL);
+  Label138.Caption:=Label138.Caption+floattostr(PctperL);
+  Label156.Caption:=Label156.Caption+floattostr(PcperL);
+  Label139.Caption:=Label139.Caption+floattostr(P0);
+  Label140.Caption:=Label140.Caption+floattostr(B0);
+  Label141.Caption:=Label141.Caption+floattostr(Perror);
+  Label142.Caption:=Label142.Caption+floattostr(Pout);
+  Label143.Caption:=Label143.Caption+floattostr(Jao);
+  Label144.Caption:=Label144.Caption+floattostr(Pco);
+  Label145.Caption:=Label145.Caption+floattostr(pc);
+  Label146.Caption:=Label146.Caption+floattostr(Pwindo);
+  Label147.Caption:=Label147.Caption+floattostr(Pao);
+  Label148.Caption:=Label148.Caption+floattostr(wso);
+  Label149.Caption:=Label149.Caption+floattostr(hso);
+  Label150.Caption:=Label150.Caption+floattostr(wto);
+  Label151.Caption:=Label151.Caption+floattostr(dco);
+  Label152.Caption:=Label152.Caption+floattostr(dc);
+  Label153.Caption:=Label153.Caption+floattostr(Lso);
+  Label154.Caption:=Label154.Caption+floattostr(hmo);
+  Label155.Caption:=Label155.Caption+floattostr(go);
+  Label157.Caption:=Label157.Caption+floattostr(A);
 
 
 end;
 
 
-
-
-procedure TForm3.Button3Click(Sender: TObject);
-var
-  G: AppendixG;
-begin
-  G.Create();
-  G.
-end;
 
 end.

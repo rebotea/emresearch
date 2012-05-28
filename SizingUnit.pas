@@ -6,7 +6,7 @@ uses
 Math;
 
 const
-{// General variables
+// General variables
 Pwr = 16e6; // Required power (W)
 rpm = 13000; // Speed (RPM)
 psi = 0; // Power factor angle
@@ -32,7 +32,7 @@ ws = 0.016; // Avg slot width (in)
 Nc = 1; // Turns per coil
 lams = 0.5; // Slot fill fraction
 sigst = 6.0e+7; // Stator winding conductivity
-}
+
 // Densities
 rhos = 7700; // Steel density (kg/m3)
 rhom = 7400; // Magnet density (kg/m3)
@@ -81,10 +81,11 @@ end;
 
 function ElectricalFrequencyRotorRadius(floor, p, q, m, rpm, vtip, Nsp, thsk: extended): TEFRROutput;
 function MagnetDimensionsToothWidthAirGapFluxDensity(Ns, PC, R, Ws, Bg, Bsat, ge, eratio, g, Br, tol :extended): MDTWAGFDOutput;
-function Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, lel, Nsct, hs, Bsat: extended): ValOutput;
-function MagneticGapFactor(Pwr, Nc, sigst, tol, le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds, pi: extended): MGFOutput;
+function Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, le1, Nsct, hs, Bsat: extended): ValOutput;
+function MagneticGapFactor(Nc, sigst, tol, le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds: extended): MGFOutput;
 function MagneticFluxInternalVoltage(thmrad, thm, pi, Bg, kg, p, Rs, Lst, Na, kw, ks, omega, Ea: extended): MFIOutput;
-function InductancesReactances(Pwr, p, m, Nsp, rhom, rhos, rhoair, psi, tol, Pa, Ra, lel, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended): IROutput;
+function InductancesReactances(p, m, Nsp, rhom, rhos, rhoair, psi, tol, Pa, Ra, le1, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended): IROutput;
+
 
 implementation
 
@@ -134,7 +135,7 @@ begin
   end;
 end;
 
-function Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, lel, Nsct, hs, Bsat: extended): ValOutput;
+function Values(thme, p, ge, Cphi, PC, R, G, wt, ws, hd, Ns, tfrac, wst, wsb, dc, Rci, Rco, le1, Nsct, hs, Bsat: extended): ValOutput;
 begin
   result.thm:= thme/p; // Magnet physical angle
   result.thmrad:= result.thm*(pi/180);
@@ -161,10 +162,10 @@ begin
   // End length (half coil)
   result.le2:= pi*result.laz;
   // End length (axial direction)
-  lel:= 2*result.le2/(2*pi);
+  le1:= 2*result.le2/(2*pi);
  end;
 
-function MagneticGapFactor(Pwr, Nc, sigst, tol, le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds, pi: extended): MGFOutput;
+function MagneticGapFactor(Nc, sigst, tol, le2, kw, ks, thmrad, R, hm, g, A, p, rhos, Rc, Ns, wt, hs, hd, wd, Bg, tfrac, dc, epsf, epsb, FO, f, BO, lams, m, Ja, As1, q, Ds: extended): MGFOutput;
 begin
   result.Rs:= R+hm+g;
   result.Ri:= R;
@@ -174,7 +175,7 @@ begin
   // Core loss calculations (per length)
   // Core mass per length
   result.McbperL:= rhos*pi*(sqr(result.Rco) - sqr(result.Rci)); //% Back iron
-  result.MctperL:=rhos *(Ns*wt*hs+2*pi*R*hd-Ns*hd*wd); //% Teeth
+  result.MctperL:=rhos *(Ns*wt*hs+2*3.14*R*hd-Ns*hd*wd); //% Teeth
   result.McperL:= result.McbperL + result.MctperL;
   // Tooth Flux Density
   result.Bt:= Bg/tfrac;
@@ -212,7 +213,7 @@ begin
      while result.notfin = true do
      begin
        // Gap power
-       result.Pgap:= 4*pi*result.ke*result.ki*kw*ks*result.kg*sin(thmrad)*(f/p)*A*Bg*sqr(Ds)*result.Lst;
+       result.Pgap:= 4*3.14*result.ke*result.ki*kw*ks*result.kg*sin(thmrad)*(f/p)*A*Bg*sqr(Ds)*result.Lst;
        // Length of conductor
        result.Lac:= 2*result.Na*(result.Lst+2*le2);
        // Stator resistance
@@ -222,7 +223,7 @@ begin
        // Core losses
        result.Pc:= result.PcperL*result.Lst;
        // Iterate to get length
-       result.Ptemp1:= result.Pgap-result.Pa-Result.Pc;
+       result.Ptemp1:= result.Pgap-result.Pa-Pc;
        result.error1:= Pwr/result.Ptemp1;
 //     err(i):= error;
        if abs(result.error1-1) < tol then
@@ -244,7 +245,7 @@ begin
   Ea:= omega*result.lambda/sqrt(2); // RMS back voltage
 end;
 
-function InductancesReactances(Pwr, p, m, Nsp, rhom, rhos, rhoair, psi, tol, Pa, Ra, lel, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended): IROutput;
+function InductancesReactances(p, m, Nsp, rhom, rhos, rhoair, psi, tol, Pa, Ra, le1, Aac, le2, As1, q, pi, Ia, Na, kw, Rs, g, hm, hs, wst, hd, Lst, perm, Nc, Ns, ws, wt, rhoc, McperL, thmrad, omega, R, nuair, Ea, muO, Pin, Ja, Ptemp, Perr, Pwind, Rey, Mser, Mm, Mc, Dmach, Lmach, Mac, Lac, Lslot: extended): IROutput;
 begin
   // Air-gap inductance
   result.Lag:= (q/2)*(4/pi)*(muO*sqr(Na)*sqr(kw)*Lst*Rs)/(sqr(p)*(g+hm));
@@ -268,7 +269,7 @@ begin
   // Mass of armature conductor
   Mac:= q*Lac*Aac*rhoc;
   //% Overall machine length
-  Lmach:= Lst+2*lel;
+  Lmach:= Lst+2*le1;
   //% Overall diameter
   Dmach:= 2*result.Rco;
   //% Core mass
@@ -303,7 +304,7 @@ begin
   //% Current density
   Ja:= Ia/Aac;
   //% Power and efficiency
-  Pin:= Pwr+Result.Pc+Pa+Pwind;
+  Pin:= Pwr+Pc+Pa+Pwind;
   result.eff:= Pwr/Pin;
   result.pf:= cos(psi);
   result.fprintf:= 'pm2calc complete: Ready.\n';
@@ -316,7 +317,7 @@ begin
   //"%V ariables for output display
   result.Pout:=Pwr/1e3;
   result.Jao:=Ja/1e4;
-  result.Pco:=Result.Pc/1e3;
+  result.Pco:=Pc/1e3;
   result.Pwindo:= Pwind/1e3;
   result.Pao:=Pa/1e3;
   result.wso:= ws*1000;
