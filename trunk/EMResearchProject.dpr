@@ -8,7 +8,8 @@ uses
   PMGeneratorWaveformUnit in 'PMGeneratorWaveformUnit.pas',
   RetSlStressConclUnit in 'RetSlStressConclUnit.pas',
   BasicSizingMethodUnit in 'BasicSizingMethodUnit.pas',
-  RotorLossesUnit in 'RotorLossesUnit.pas';
+  RotorLossesUnit in 'RotorLossesUnit.pas',
+  RotorLossesFromSlotEffectsUnit in 'RotorLossesFromSlotEffectsUnit.pas';
 
 {$R *.res}
 

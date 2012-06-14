@@ -52,6 +52,7 @@
 			<DCCReference Include="RetSlStressConclUnit.pas"/>
 			<DCCReference Include="BasicSizingMethodUnit.pas"/>
 			<DCCReference Include="RotorLossesUnit.pas"/>
+			<DCCReference Include="RotorLossesFromSlotEffectsUnit.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
