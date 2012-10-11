@@ -4,7 +4,7 @@ object Form3: TForm3
   VertScrollBar.Tracking = True
   Caption = 'Form3'
   ClientHeight = 746
-  ClientWidth = 1366
+  ClientWidth = 1284
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Form3: TForm3
   object ScrollBox1: TScrollBox
     Left = 0
     Top = 0
-    Width = 1366
+    Width = 1284
     Height = 746
     VertScrollBar.Position = 224
     Align = alClient
@@ -27,7 +27,7 @@ object Form3: TForm3
     object PageControl1: TPageControl
       Left = 0
       Top = -224
-      Width = 1345
+      Width = 1263
       Height = 966
       ActivePage = TabSheet1
       Align = alTop
@@ -39,13 +39,11 @@ object Form3: TForm3
         object GroupBox2: TGroupBox
           Left = 0
           Top = 457
-          Width = 1337
+          Width = 1255
           Height = 505
           Align = alTop
           Caption = #1042#1099#1093#1086#1076#1085#1099#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
           TabOrder = 0
-          ExplicitLeft = -3
-          ExplicitTop = 449
           object Label31: TLabel
             Left = 18
             Top = 18
@@ -1261,7 +1259,7 @@ object Form3: TForm3
         object GroupBox1: TGroupBox
           Left = 0
           Top = 0
-          Width = 1337
+          Width = 1255
           Height = 457
           Align = alTop
           Caption = #1042#1093#1086#1076#1085#1099#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
