@@ -401,6 +401,7 @@ begin
   alfa_m:= StrToFloat(Edit41.Text);
   g_act:=  StrToFloat(Edit42.Text);
   wi:=     StrToFloat(Edit43.Text);
+  // todo
   kz_1:=  StrToFloat(Edit44.Text) ;
   sys_s:=  StrToFloat(Edit45.Text);
   iamb:= StrToFloat(Edit46.Text);
